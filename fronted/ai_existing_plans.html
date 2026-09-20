@@ -1,0 +1,249 @@
+<!-- =========================================================
+ FILE: fronted/ai_existing_plans.html
+
+ PURPOSE:
+ - Selected project ke all separate work plans
+ - Task status buttons
+ - Automatic progress
+ - Har plan ka separate AI Update box
+========================================================== -->
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Project Work Plans - Constrix</title>
+
+    <link
+        rel="stylesheet"
+        href="/CSS/ai_planner.css"
+    >
+
+</head>
+
+<body>
+
+<header>
+
+    <h2>CONSTRIX</h2>
+
+    <p>AI Work Planner</p>
+
+</header>
+
+
+<main>
+
+    <!-- BACK BUTTON -->
+
+    <a
+        href="{{ url_for('ai_planner') }}"
+        class="back-btn"
+    >
+        ← Back to AI Work Planner
+    </a>
+
+
+    <h1>
+        {{ project['project_name'] }}
+    </h1>
+
+    <p>
+        Project Work Plans
+    </p>
+
+
+    <!-- =====================================================
+         AUTOMATIC PROJECT PROGRESS
+    ====================================================== -->
+
+    <section class="result-box">
+
+        <h2>
+            Work Progress
+        </h2>
+
+        <h3>
+            {{ progress }}%
+        </h3>
+
+        <p>
+            {{ completed_tasks }}
+            of
+            {{ total_tasks }}
+            tasks completed
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         MULTIPLE SEPARATE WORK PLANS
+    ====================================================== -->
+
+    {% if plans %}
+
+        {% for work_name, tasks in plans.items() %}
+
+            <section class="result-box">
+
+                <!-- PLAN NAME -->
+
+                <h2>
+                    {{ work_name }}
+                </h2>
+
+
+                <!-- =========================================
+                     PLAN TASKS
+                ========================================== -->
+
+                <ol>
+
+                    {% for task in tasks %}
+
+                        <li>
+
+                            <strong>
+                                {{ task['task_name'] }}
+                            </strong>
+
+                            -
+
+                            {{ task['status'] }}
+
+
+                            <!-- =============================
+                                 STATUS BUTTONS
+                            ============================== -->
+
+                            {% if task['status'] == 'Pending' %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'ai_task_status',
+                                        task_id=task['id']
+                                    ) }}"
+                                    style="display:inline;"
+                                >
+
+                                    <button type="submit">
+                                        Start Work
+                                    </button>
+
+                                </form>
+
+
+                            {% elif task['status'] == 'In Progress' %}
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for(
+                                        'ai_task_status',
+                                        task_id=task['id']
+                                    ) }}"
+                                    style="display:inline;"
+                                >
+
+                                    <button type="submit">
+                                        Mark Completed
+                                    </button>
+
+                                </form>
+
+
+                            {% elif task['status'] == 'Completed' %}
+
+                                <strong>
+                                    ✓ Completed
+                                </strong>
+
+                            {% endif %}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ol>
+
+
+                <!-- =========================================
+                     UPDATE ONLY THIS PLAN WITH AI
+                ========================================== -->
+
+                <hr>
+
+                <h3>
+                    Update Plan with AI
+                </h3>
+
+                <p>
+                    Tell AI what you want to change in this plan.
+                </p>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for('ai_update_plan') }}"
+                >
+
+                    <!-- CURRENT PROJECT -->
+
+                    <input
+                        type="hidden"
+                        name="project_id"
+                        value="{{ project['id'] }}"
+                    >
+
+
+                    <!-- CURRENT WORK PLAN -->
+
+                    <input
+                        type="hidden"
+                        name="work_name"
+                        value="{{ work_name }}"
+                    >
+
+
+                    <!-- NATURAL LANGUAGE AI INSTRUCTION -->
+
+                    <input
+                        type="text"
+                        name="instruction"
+                        placeholder="Example: Add plaster after task 2"
+                        required
+                    >
+
+
+                    <button type="submit">
+                        Update Plan
+                    </button>
+
+                </form>
+
+            </section>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <section class="result-box">
+
+            <p>
+                No work plans generated for this project.
+            </p>
+
+        </section>
+
+    {% endif %}
+
+
+</main>
+
+</body>
+
+</html>

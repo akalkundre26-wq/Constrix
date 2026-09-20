@@ -1,0 +1,205 @@
+<!-- ==========================================
+     ADD DAILY UPDATE
+     Date + Work Details + Site Photos
+=========================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Add Daily Update - Constrix</title>
+
+    <link rel="stylesheet"
+          href="/CSS/project_detailed.css">
+
+</head>
+
+<body>
+
+
+<header>
+
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Smart Construction Tracking</p>
+    </div>
+
+    <div class="header-user">
+
+        <strong>
+            {{ session['full_name'] }}
+        </strong>
+
+        <span>
+            {{ session['company_name'] }}
+        </span>
+
+    </div>
+
+</header>
+
+
+<div class="dashboard">
+
+
+    <!-- SIDEBAR -->
+
+    <aside>
+
+        <div class="contractor-code">
+
+            <small>Contractor Code</small>
+
+            <strong>
+                {{ session['contractor_code'] }}
+            </strong>
+
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a class="active"
+           href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+        <a href="#">Labor</a>
+
+        <a href="#">Subcontractor</a>
+
+        <a href="#">
+            Material & Expenses
+        </a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a href="#">Profile</a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main>
+
+        <div class="page-heading">
+
+            <div>
+
+                <h1>Add Daily Update</h1>
+
+                <p>
+                    {{ project["project_name"] }}
+                </p>
+
+            </div>
+
+            <a href="{{ url_for(
+                    'project.view_project',
+                    project_id=project['id']
+                ) }}"
+               class="back-btn">
+
+                ← Back to Project
+
+            </a>
+
+        </div>
+
+
+        <!-- DAILY UPDATE FORM -->
+
+        <div class="section-card">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+
+                <!-- DATE -->
+
+                <label>
+                    Update Date
+                </label>
+
+                <br><br>
+
+                <input type="date"
+                       name="update_date"
+                       required>
+
+
+                <br><br>
+
+
+                <!-- WORK DONE -->
+
+                <label>
+                    Work Done Today
+                </label>
+
+                <br><br>
+
+                <textarea
+                    name="work_details"
+                    rows="5"
+                    placeholder="Example: Wall plaster work completed."
+                    required></textarea>
+
+
+                <br><br>
+
+
+                <!-- PHOTOS -->
+
+                <label>
+                    Site Photos
+                </label>
+
+                <br><br>
+
+                <input type="file"
+                       name="photos"
+                       accept="image/*"
+                       multiple>
+
+
+                <p>
+                    You can select multiple site photos.
+                </p>
+
+
+                <br>
+
+
+                <!-- SAVE -->
+
+                <button type="submit">
+                    Save Update
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

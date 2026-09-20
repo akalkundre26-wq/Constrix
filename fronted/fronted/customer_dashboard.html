@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard - Constrix</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='customer.css') }}">
+</head>
+
+<body>
+
+<div class="customer-header">
+    <h2>CONSTRIX</h2>
+
+    <div>
+        Welcome, {{ customer["full_name"] }}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</div>
+
+
+<main class="customer-main">
+
+    <h2>Customer Dashboard</h2>
+
+    <div class="customer-dashboard-grid">
+
+
+        <!-- LEFT SIDE -->
+        <div class="customer-left">
+
+            <!-- PROFILE -->
+            <div class="customer-box">
+
+                <h3>My Profile</h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ customer["full_name"] }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ customer["email"] }}
+                </p>
+
+                <p>
+                    <strong>Mobile:</strong>
+                    {{ customer["mobile"] }}
+                </p>
+
+            </div>
+
+
+            <!-- PROJECT -->
+            <div class="customer-box">
+
+                <h3>My Project</h3>
+
+                {% if project %}
+
+                    <p>
+                        <strong>Project:</strong>
+                        {{ project["project_name"] }}
+                    </p>
+
+                    <p>
+                        <strong>Site Address:</strong>
+                        {{ project["site_address"] }}
+                    </p>
+
+                    <p>
+                        <strong>Start Date:</strong>
+                        {{ project["start_date"] }}
+                    </p>
+
+                    <p>
+                        <strong>Expected End Date:</strong>
+                        {{ project["end_date"] }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        {{ project["status"] }}
+                    </p>
+
+
+                    <p><strong>Progress</strong></p>
+
+                    <div class="customer-progress">
+
+                        <div
+                            class="customer-progress-fill"
+                            style="width: {{ project['progress'] }}%;">
+                        </div>
+
+                    </div>
+
+                    <p>
+                        {{ project["progress"] }}% Completed
+                    </p>
+
+
+                    <div class="project-buttons">
+
+                    <a href="{{ url_for('customer_project') }}"
+   class="customer-btn">
+    View Project
+</a>
+
+                        <a href="#"
+                           class="customer-btn secondary-btn">
+                            View Work Plan
+                        </a>
+
+                    </div>
+
+                {% else %}
+
+                    <p>
+                        No project has been assigned yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="customer-right">
+
+            <div class="customer-box">
+
+                <h3>Queries & Messages</h3>
+
+                <p class="query-info">
+                    Ask your contractor about your project.
+                </p>
+
+                <form>
+
+                    <textarea
+                        placeholder="Type your question here..."
+                        rows="4">
+                    </textarea>
+
+                    <button
+                        type="button"
+                        class="customer-btn">
+                        Send Question
+                    </button>
+
+                </form>
+
+
+                <hr>
+
+                <h4>Previous Messages</h4>
+
+                <p class="no-message">
+                    No messages yet.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

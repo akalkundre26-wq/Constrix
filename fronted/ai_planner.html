@@ -1,0 +1,186 @@
+<!-- ==================================================
+ FILE: fronted/ai_planner.html
+ PURPOSE:
+ Existing AI Planner UI + manual task Update + Delete Plan.
+=================================================== -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Work Planner - Constrix</title>
+    <link rel="stylesheet" href="../CSS/ai_planner.css">
+</head>
+<body>
+
+<header>
+    <h2>CONSTRIX</h2>
+    <p>AI Work Planner</p>
+</header>
+
+<main>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">
+        ← Back to Dashboard
+    </a>
+
+    <h1>AI Work Planner</h1>
+    <p>Enter the work and generate a simple construction work plan.</p>
+
+    <form method="POST">
+        <label>Select Project:</label>
+        <select name="project_id" required>
+            <option value="">Select Project</option>
+            {% for project in projects %}
+            <option value="{{ project['id'] }}"
+                {% if selected_project_id|string == project['id']|string %}
+                    selected
+                {% endif %}>
+                {{ project['project_name'] }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label>What work do you want to plan?</label>
+        <input
+            type="text"
+            name="work_name"
+            value="{{ work_name or '' }}"
+            placeholder="Example: Wall Painting - 8 tasks"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">Generate Plan</button>
+    </form>
+
+    {% if error %}
+        <div class="result-box">
+            <h3>Unable to Generate Plan</h3>
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {% if generated_tasks %}
+        <section class="result-box">
+            <h2>Generated Work Plan</h2>
+
+            <p>
+                <strong>Work:</strong>
+                {{ work_name }}
+            </p>
+
+            <ol>
+                {% for task in generated_tasks %}
+                    <li>
+                        {{ task }} - <strong>Pending</strong>
+                    </li>
+                {% endfor %}
+            </ol>
+
+            <p>Plan saved successfully.</p>
+        </section>
+    {% endif %}
+
+    {% if saved_plans %}
+
+        <section class="result-box">
+            <h2>Project Progress: {{ progress }}%</h2>
+        </section>
+
+        {% for plan_name, tasks in saved_plans.items() %}
+
+            <section class="result-box">
+
+                <h2>{{ plan_name }}</h2>
+
+                <ol>
+                    {% for task in tasks %}
+                        <li>
+                            {{ task['task_name'] }}
+                            - <strong>{{ task['status'] }}</strong>
+                        </li>
+                    {% endfor %}
+                </ol>
+
+                <button
+                    type="button"
+                    onclick="document.getElementById('update-plan-{{ loop.index }}').style.display='block'">
+                    Update Plan
+                </button>
+
+                <form
+                    method="POST"
+                    style="display:inline;"
+                    onsubmit="return confirm('Are you sure you want to delete this complete work plan?');">
+
+                    <input type="hidden" name="action" value="delete_plan">
+                    <input type="hidden" name="project_id" value="{{ selected_project_id }}">
+                    <input type="hidden" name="work_name" value="{{ plan_name }}">
+
+                    <button type="submit">Delete Plan</button>
+                </form>
+
+                <div
+                    id="update-plan-{{ loop.index }}"
+                    style="display:none; margin-top:20px;">
+
+                    <h3>Update Tasks</h3>
+
+                    <form method="POST">
+
+                        <input type="hidden" name="action" value="update_plan">
+                        <input type="hidden" name="project_id" value="{{ selected_project_id }}">
+                        <input type="hidden" name="old_work_name" value="{{ plan_name }}">
+
+                        {% for task in tasks %}
+
+                            <div style="margin-bottom:10px;">
+
+                                <input
+                                    type="hidden"
+                                    name="task_id"
+                                    value="{{ task['id'] }}">
+
+                                <input
+                                    type="text"
+                                    name="task_name"
+                                    value="{{ task['task_name'] }}"
+                                    required>
+
+                                <strong>{{ task['status'] }}</strong>
+
+                            </div>
+
+                        {% endfor %}
+
+                        <br>
+
+                        <label>Add New Task:</label>
+
+                        <input
+                            type="text"
+                            name="new_task"
+                            placeholder="Example: Look Through">
+
+                        <br><br>
+
+                        <button type="submit">
+                            Save Update
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+        {% endfor %}
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Edit Project - Constrix</title>
+
+    <link rel="stylesheet" href="/CSS/projects.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div>
+
+        <h2>CONSTRIX</h2>
+
+        <p>Smart Construction Tracking</p>
+
+    </div>
+
+    <div class="header-user">
+
+        <strong>{{ session['full_name'] }}</strong>
+
+        <span>{{ session['company_name'] }}</span>
+
+    </div>
+
+</header>
+
+
+
+<div class="dashboard">
+
+    <aside>
+
+        <div class="contractor-code">
+
+            <small>Contractor Code</small>
+
+            <strong>{{ session['contractor_code'] }}</strong>
+
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+
+        <a class="active"
+           href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">Customers</a>
+
+        <a href="#">Labor</a>
+
+        <a href="#">Subcontractor</a>
+
+        <a href="#">Material & Expenses</a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a href="#">Profile</a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <main>
+
+        <div class="page-heading">
+
+            <div>
+
+                <h1>Edit Project</h1>
+
+                <p>Update project details.</p>
+
+            </div>
+
+            <a href="{{ url_for('project.view_project', project_id=project['id']) }}"
+               class="back-project-btn">
+
+                ← Back
+
+            </a>
+
+        </div>
+
+
+
+        <form method="POST"
+              class="project-form">
+
+
+
+            <div class="form-section">
+
+                <h2>Project Information</h2>
+
+                <label>Project Name</label>
+
+                <input
+                    type="text"
+                    name="project_name"
+                    value="{{ project['project_name'] }}"
+                    required>
+
+
+
+                <!-- ==========================================
+                     PROJECT CUSTOMER DROPDOWN
+                     Shows registered customers of this Admin
+                =========================================== -->
+
+                <label>Customer</label>
+
+                <select name="customer_id" required>
+
+                    <option value="">
+                        Select Customer
+                    </option>
+
+                    {% for customer in customers %}
+
+                        <option
+                            value="{{ customer['id'] }}"
+                            {% if customer['id'] == project['customer_id'] %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ customer['full_name'] }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+
+                <label>Project Type</label>
+
+                <select name="project_type">
+
+                    <option value="Residential"
+                        {% if project['project_type'] == 'Residential' %}selected{% endif %}>
+                        Residential
+                    </option>
+
+                    <option value="Commercial"
+                        {% if project['project_type'] == 'Commercial' %}selected{% endif %}>
+                        Commercial
+                    </option>
+
+                    <option value="Renovation"
+                        {% if project['project_type'] == 'Renovation' %}selected{% endif %}>
+                        Renovation
+                    </option>
+
+                    <option value="Interior"
+                        {% if project['project_type'] == 'Interior' %}selected{% endif %}>
+                        Interior
+                    </option>
+
+                    <option value="Other"
+                        {% if project['project_type'] == 'Other' %}selected{% endif %}>
+                        Other
+                    </option>
+
+                </select>
+
+
+
+                <label>Site Address</label>
+
+                <textarea name="site_address">{{ project['site_address'] }}</textarea>
+
+
+
+                <label>Description</label>
+
+                <textarea name="description">{{ project['description'] }}</textarea>
+
+            </div>
+
+
+
+            <div class="form-section">
+
+                <h2>Timeline & Budget</h2>
+
+
+
+                <div class="form-row">
+
+                    <div>
+
+                        <label>Start Date</label>
+
+                        <input
+                            type="date"
+                            name="start_date"
+                            value="{{ project['start_date'] }}">
+
+                    </div>
+
+
+
+                    <div>
+
+                        <label>Expected End Date</label>
+
+                        <input
+                            type="date"
+                            name="end_date"
+                            value="{{ project['end_date'] }}">
+
+                    </div>
+
+                </div>
+
+
+
+                <label>Status</label>
+
+                <select name="status">
+
+                    <option value="Ongoing"
+                        {% if project['status'] == 'Ongoing' %}selected{% endif %}>
+                        Ongoing
+                    </option>
+
+                    <option value="Planning"
+                        {% if project['status'] == 'Planning' %}selected{% endif %}>
+                        Planning
+                    </option>
+
+                    <option value="On Hold"
+                        {% if project['status'] == 'On Hold' %}selected{% endif %}>
+                        On Hold
+                    </option>
+
+                    <option value="Completed"
+                        {% if project['status'] == 'Completed' %}selected{% endif %}>
+                        Completed
+                    </option>
+
+                </select>
+
+
+
+                <label>Expected Budget (₹)</label>
+
+                <input
+                    type="number"
+                    name="budget"
+                    value="{{ project['budget'] }}"
+                    min="0">
+
+
+
+                <button
+                    type="submit"
+                    class="save-project-btn">
+
+                    Update Project
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

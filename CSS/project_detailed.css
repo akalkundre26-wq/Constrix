@@ -1,0 +1,436 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    color: #222;
+}
+
+
+/* HEADER */
+
+header {
+    height: 75px;
+    background: #1f2937;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+}
+
+header h2 {
+    margin: 0;
+}
+
+header p {
+    margin: 4px 0 0;
+    color: #cbd5e1;
+}
+
+.header-user {
+    text-align: right;
+}
+
+.header-user strong {
+    display: block;
+}
+
+.header-user span {
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+
+/* LAYOUT */
+
+.dashboard {
+    display: flex;
+    min-height: calc(100vh - 75px);
+}
+
+
+/* SIDEBAR */
+
+aside {
+    width: 230px;
+    background: #202b3c;
+    padding-top: 20px;
+    flex-shrink: 0;
+}
+
+.contractor-code {
+    padding: 5px 22px 20px;
+    color: white;
+}
+
+.contractor-code small {
+    display: block;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.contractor-code strong {
+    color: #f4b942;
+}
+
+aside a {
+    display: block;
+    padding: 15px 22px;
+
+    color: white;
+    text-decoration: none;
+}
+
+aside a:hover {
+    background: #344154;
+}
+
+aside .active {
+    background: #2f80ed;
+}
+
+
+/* MAIN */
+
+main {
+    flex: 1;
+    padding: 30px;
+    min-width: 0;
+}
+
+
+/* PAGE HEADING */
+
+.page-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.page-heading h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.page-heading p {
+    margin: 7px 0 0;
+    color: #666;
+}
+
+.back-btn {
+    padding: 11px 16px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+
+    color: #333;
+    text-decoration: none;
+}
+
+
+/* TOP SECTION */
+
+.top-section {
+    display: grid;
+    grid-template-columns: 42% 1fr;
+    gap: 25px;
+
+    margin-bottom: 25px;
+}
+
+
+/* IMAGE */
+
+.project-photo {
+    height: 330px;
+
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.project-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-photo {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #777;
+    background: #e9edf2;
+}
+
+
+/* PROJECT SUMMARY */
+
+.project-summary {
+    background: white;
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.summary-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.summary-heading h2 {
+    margin: 0;
+}
+
+.status {
+    background: #e5f7ea;
+    color: #16823b;
+
+    padding: 7px 14px;
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* INFORMATION */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 22px;
+}
+
+.info-grid small,
+.location small {
+    display: block;
+
+    color: #777;
+    margin-bottom: 6px;
+}
+
+.info-grid strong {
+    font-size: 15px;
+}
+
+.location {
+    margin-top: 25px;
+    padding-top: 20px;
+
+    border-top: 1px solid #eee;
+}
+
+.location p {
+    margin: 0;
+}
+
+
+/* GENERAL CARD */
+
+.section-card {
+    background: white;
+
+    padding: 25px;
+    margin-bottom: 25px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.section-card h2 {
+    margin-top: 0;
+}
+
+
+/* PROGRESS */
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.percentage {
+    color: #2f80ed;
+    font-size: 22px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+
+    background: #e5e7eb;
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+
+    background: #2f80ed;
+    border-radius: 20px;
+}
+
+.progress-text {
+    margin-bottom: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* DESCRIPTION */
+
+.description {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+
+/* LOWER CARDS */
+
+.lower-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+
+    padding-bottom: 30px;
+}
+
+.mini-card {
+    background: white;
+    padding: 23px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+
+.mini-card h2 {
+    margin-top: 0;
+    font-size: 19px;
+}
+
+.mini-card p {
+    min-height: 45px;
+
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.mini-card button {
+    border: none;
+
+    background: #2f80ed;
+    color: white;
+
+    padding: 10px 15px;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.mini-card button:hover {
+    background: #1768c7;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 950px) {
+
+    .top-section {
+        grid-template-columns: 1fr;
+    }
+
+    .lower-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =====================================================
+   AI WORK PLAN
+   Project Details task table
+===================================================== */
+
+.ai-plan-note {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.work-plan-block {
+    margin-top: 18px;
+}
+
+.work-plan-block h3 {
+    margin-bottom: 10px;
+}
+
+.work-plan-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.work-plan-table th,
+.work-plan-table td {
+    padding: 11px 12px;
+    border: 1px solid #e2e2e2;
+    text-align: left;
+}
+
+.work-plan-table th {
+    background: #f3f4f6;
+}
+
+.task-status {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Pending */
+.task-status.pending {
+    background: #eeeeee;
+    color: #444;
+}
+
+/* In Progress */
+.task-status.in-progress {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Completed */
+.task-status.completed {
+    background: #dcfce7;
+    color: #15803d;
+}

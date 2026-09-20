@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assign Work - Constrix</title>
+   <link rel="stylesheet" href="/CSS/assign_work.css">
+</head>
+
+<body>
+
+<div class="assign-box">
+
+    <h2>
+        Assign Work to {{ labor["full_name"] }}
+    </h2>
+
+    <form method="POST">
+
+        <label>Project</label>
+        <select name="project_id" required>
+
+            <option value="">
+                Select Project
+            </option>
+
+            {% for project in projects %}
+
+            <option value="{{ project['id'] }}">
+                {{ project["project_name"] }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <label>Task</label>
+
+        <input
+            type="text"
+            name="task"
+            placeholder="Example: Wall Painting"
+            required
+        >
+
+
+        <label>Work Details</label>
+
+        <textarea
+            name="work_details"
+            placeholder="Enter work details"
+        ></textarea>
+
+
+        <label>Start Date</label>
+
+        <input
+            type="date"
+            name="start_date"
+        >
+
+
+        <label>Due Date</label>
+
+        <input
+            type="date"
+            name="due_date"
+        >
+
+
+        <button type="submit">
+            Assign Work
+        </button>
+
+    </form>
+
+    <a href="/admin/labor" class="back-link">
+        ← Back to Labor List
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+ 
+    <title>My Attendance</title> 
+ 
+    <link rel="stylesheet" 
+          href="{{ url_for('static', filename='admin.css') }}"> 
+ 
+    <link rel="stylesheet" 
+          href="{{ url_for('static', filename='labor.css') }}"> 
+ 
+</head> 
+ 
+<body> 
+ 
+<main class="main-content"> 
+ 
+    <h2>My Attendance</h2> 
+ 
+    <p> 
+        Welcome, 
+        <strong>{{ labor["full_name"] }}</strong> 
+    </p> 
+ 
+ 
+    <!-- MONTH SELECT --> 
+    <div class="attendance-month-box"> 
+ 
+        <form method="GET"> 
+ 
+            <label>Select Month:</label> 
+ 
+            <input 
+                type="month" 
+                name="month" 
+                value="{{ selected_month }}" 
+            > 
+ 
+            <button type="submit"> 
+                View 
+            </button> 
+ 
+        </form> 
+ 
+    </div> 
+ 
+ 
+    <h3 class="calendar-title"> 
+        {{ month_name }} 
+    </h3> 
+ 
+ 
+    <!-- SUMMARY --> 
+    <div class="attendance-summary"> 
+ 
+        <div class="summary-box"> 
+            <h3>Present</h3> 
+            <p>{{ present_count }}</p> 
+        </div> 
+ 
+        <div class="summary-box"> 
+            <h3>Absent</h3> 
+            <p>{{ absent_count }}</p> 
+        </div> 
+ 
+        <div class="summary-box"> 
+            <h3>Half Day</h3> 
+            <p>{{ half_count }}</p> 
+        </div> 
+ 
+        <div class="summary-box"> 
+            <h3>Weekly Off</h3> 
+            <p>{{ off_count }}</p> 
+        </div> 
+ 
+        <div class="summary-box"> 
+            <h3>OT Hours</h3> 
+            <p>{{ ot_count }}</p> 
+        </div> 
+ 
+    </div> 
+ 
+ 
+    <!-- WEEK DAYS --> 
+    <div class="calendar-weekdays"> 
+ 
+        <div>Mon</div> 
+        <div>Tue</div> 
+        <div>Wed</div> 
+        <div>Thu</div> 
+        <div>Fri</div> 
+        <div>Sat</div> 
+        <div>Sun</div> 
+ 
+    </div> 
+ 
+ 
+    <!-- MONTH CALENDAR --> 
+    <div class="monthly-calendar"> 
+ 
+        {% for week in weeks %} 
+ 
+            {% for day in week %} 
+ 
+                {% if day == 0 %} 
+ 
+                    <div class="month-day empty-day"></div> 
+ 
+                {% else %} 
+ 
+                    {% set record = attendance_map.get(day) %} 
+ 
+                    {% if record %} 
+ 
+                        {% if record["status"] == "Present" 
+                              and record["overtime_hours"]|int > 0 %} 
+ 
+                            <div class="month-day ot"> 
+ 
+                        {% elif record["status"] == "Present" %} 
+ 
+                            <div class="month-day present"> 
+ 
+                        {% elif record["status"] == "Absent" %} 
+ 
+                            <div class="month-day absent"> 
+ 
+                        {% elif record["status"] == "Half Day" %} 
+ 
+                            <div class="month-day half"> 
+ 
+                        {% elif record["status"] == "Weekly Off" %} 
+ 
+                            <div class="month-day off"> 
+ 
+                        {% else %} 
+ 
+                            <div class="month-day"> 
+ 
+                        {% endif %} 
+ 
+                            <span class="day-number"> 
+                                {{ day }} 
+                            </span> 
+ 
+                            <p class="day-status"> 
+                                {{ record["status"] }} 
+                            </p> 
+ 
+                            <small> 
+                                {{ record["project_name"] }} 
+                            </small> 
+ 
+                            {% if record["overtime_hours"]|int > 0 %} 
+ 
+                                <p class="ot-text"> 
+                                    OT: 
+                                    {{ record["overtime_hours"] }} hrs
+                                </p> 
+ 
+                            {% endif %} 
+ 
+                        </div> 
+ 
+                    {% else %} 
+ 
+                        <div class="month-day"> 
+ 
+                            <span class="day-number"> 
+                                {{ day }} 
+                            </span> 
+ 
+                            <p class="no-record"> 
+                                No Record 
+                            </p> 
+ 
+                        </div> 
+ 
+                    {% endif %} 
+ 
+                {% endif %} 
+ 
+            {% endfor %} 
+ 
+        {% endfor %} 
+ 
+    </div> 
+
+
+    <!-- ATTENDANCE TABLE -->
+    <div class="calendar-box">
+
+        <h3>Attendance Records</h3>
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>OT Hours</th>
+            </tr>
+
+            {% for record in attendance %}
+
+            <tr>
+                <td>{{ record["attendance_date"] }}</td>
+
+                <td>{{ record["project_name"] }}</td>
+
+                <td>{{ record["status"] }}</td>
+
+                <td>{{ record["overtime_hours"] }}</td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="4"
+                    style="text-align:center;">
+                    No attendance available.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+ 
+ 
+    <!-- LEGEND --> 
+    <div class="attendance-legend"> 
+ 
+        <span>🟢 Present</span> 
+ 
+        <span>🔵 Present + OT</span> 
+ 
+        <span>🟡 Half Day</span> 
+ 
+        <span>🔴 Absent</span> 
+ 
+        <span>⚪ Weekly Off</span> 
+ 
+    </div> 
+ 
+ 
+    <br> 
+ 
+    <a href="{{ url_for('labor_dashboard') }}" 
+       class="back-btn"> 
+ 
+        Back to Dashboard 
+ 
+    </a> 
+ 
+</main> 
+ 
+</body> 
+</html>

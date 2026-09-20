@@ -1,0 +1,672 @@
+<!-- =====================================================
+     CONSTRIX - MATERIAL & EXPENSES PAGE
+     File: fronted/material_expenses.html
+
+     Purpose:
+     1. Select Project
+     2. Add Material
+     3. Use Material / Add Stock
+     4. Add Expense
+     5. Automatically show Total Expense
+====================================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Material & Expenses - Constrix</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='project_detailed.css') }}">
+
+    <!-- =====================================================
+         MATERIAL & EXPENSES PAGE DESIGN
+         Kept inside this file so no CSS file edit is needed now
+    ====================================================== -->
+
+    <style>
+
+        .material-page {
+            padding: 30px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .material-heading {
+            margin-bottom: 25px;
+        }
+
+        .material-heading h1 {
+            margin-bottom: 5px;
+        }
+
+        .project-select-box,
+        .material-box,
+        .expense-box {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .project-select-box select {
+            width: 350px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .project-select-box button,
+        .add-form button,
+        .small-form button {
+            padding: 9px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+        }
+
+        .project-select-box button:hover,
+        .add-form button:hover,
+        .small-form button:hover {
+            opacity: 0.85;
+        }
+
+        .selected-project {
+            margin-bottom: 20px;
+        }
+
+        .add-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0 25px 0;
+        }
+
+        .add-form input,
+        .add-form select {
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .data-table th {
+            background: #f5f5f5;
+        }
+
+        .stock-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .small-form {
+            display: flex;
+            gap: 5px;
+        }
+
+        .small-form input {
+            width: 85px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .total-expense {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 7px;
+            text-align: right;
+            font-size: 20px;
+        }
+
+        .empty-text {
+            color: #777;
+            margin-top: 15px;
+        }
+
+        .flash-message {
+            padding: 10px 15px;
+            background: #eaf7ea;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header>
+
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Smart Construction Tracking</p>
+    </div>
+
+    <div class="header-user">
+        <strong>{{ session['full_name'] }}</strong>
+        <span>{{ session['company_name'] }}</span>
+    </div>
+
+</header>
+
+
+<div class="dashboard">
+
+
+    <!-- =================================================
+         ADMIN SIDEBAR
+    ================================================== -->
+
+    <aside>
+
+    <!-- ADMIN SIDEBAR -->
+    {% if session.get("role") == "admin" %}
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+        <a href="{{ url_for('labor') }}">
+            Labor
+        </a>
+
+        <a href="{{ url_for('project.material_expenses') }}">
+            Material & Expenses
+        </a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+<!-- =====================================================
+     LABOR / SUBCONTRACTOR SIDEBAR
+====================================================== -->
+{% elif session.get("role") == "labor" %}
+
+    <!-- DASHBOARD -->
+    <a href="{{ url_for('labor_dashboard') }}">
+        Dashboard
+    </a>
+
+    <!-- PROJECT -->
+    <a href="{{ url_for('project.projects') }}">
+        Project
+    </a>
+
+    <!-- ATTENDANCE -->
+    <a href="{{ url_for('labor_my_attendance') }}">
+        Attendance
+    </a>
+
+    <!-- SALARY -->
+    <a href="{{ url_for('labor_my_salary') }}">
+        Salary
+    </a>
+
+    <!-- MATERIAL & EXPENSES -->
+    <a class="active"
+       href="{{ url_for('project.material_expenses') }}">
+        Material & Expenses
+    </a>
+
+    <!-- LOGOUT -->
+    <a href="{{ url_for('logout') }}">
+        Logout
+    </a>
+
+{% endif %}
+
+</aside>
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="material-page">
+
+
+        <div class="material-heading">
+
+            <h1>Material & Expenses</h1>
+
+            <p>
+                Manage project material stock and expenses.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             FLASH MESSAGE
+        ================================================== -->
+
+        {% with messages = get_flashed_messages() %}
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <!-- =================================================
+             SELECT PROJECT
+        ================================================== -->
+
+        <div class="project-select-box">
+
+            <h2>Select Project</h2>
+
+            <form method="GET"
+                  action="{{ url_for('project.material_expenses') }}">
+
+                <select name="project_id" required>
+
+                    <option value="">
+                        -- Select Project --
+                    </option>
+
+                    {% for project in projects %}
+
+                        <option
+                            value="{{ project['id'] }}"
+
+                            {% if selected_project
+                               and selected_project['id'] == project['id'] %}
+
+                                selected
+
+                            {% endif %}
+                        >
+
+                            {{ project['project_name'] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button type="submit">
+                    View
+                </button>
+
+            </form>
+
+        </div>
+
+
+        {% if selected_project %}
+
+
+        <!-- =================================================
+             SELECTED PROJECT
+        ================================================== -->
+
+        <div class="selected-project">
+
+            <h2>
+                {{ selected_project['project_name'] }}
+            </h2>
+
+            <p>
+                Customer:
+                <strong>
+                    {{ selected_project['customer_name'] }}
+                </strong>
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             MATERIAL SECTION
+        ================================================== -->
+
+        <div class="material-box">
+
+            <h2>Materials</h2>
+
+
+            <!-- ADD NEW MATERIAL -->
+
+            <form class="add-form"
+                  method="POST"
+                  action="{{ url_for(
+                      'project.add_material',
+                      project_id=selected_project['id']
+                  ) }}">
+
+                <input
+                    type="text"
+                    name="material_name"
+                    placeholder="Material Name"
+                    required>
+
+                <input
+                    type="number"
+                    name="quantity"
+                    placeholder="Quantity"
+                    min="0"
+                    step="0.01"
+                    required>
+
+                <select name="unit" required>
+
+                    <option value="">
+                        Unit
+                    </option>
+
+                    <option value="Bags">
+                        Bags
+                    </option>
+
+                    <option value="Kg">
+                        Kg
+                    </option>
+
+                    <option value="Ton">
+                        Ton
+                    </option>
+
+                    <option value="Pieces">
+                        Pieces
+                    </option>
+
+                    <option value="Litres">
+                        Litres
+                    </option>
+
+                    <option value="Feet">
+                        Feet
+                    </option>
+
+                </select>
+
+                <button type="submit">
+                    + Add Material
+                </button>
+
+            </form>
+
+
+            <!-- MATERIAL TABLE -->
+
+            {% if materials %}
+
+            <table class="data-table">
+
+                <tr>
+                    <th>Material</th>
+                    <th>Available Stock</th>
+                    <th>Use Material</th>
+                    <th>Add Stock</th>
+                </tr>
+
+
+                {% for material in materials %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            {{ material['material_name'] }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ material['quantity'] }}
+                        {{ material['unit'] }}
+                    </td>
+
+
+                    <!-- USE MATERIAL -->
+
+                    <td>
+
+                        <form class="small-form"
+                              method="POST"
+                              action="{{ url_for(
+                                  'project.use_material',
+                                  material_id=material['id']
+                              ) }}">
+
+                            <input
+                                type="number"
+                                name="used_quantity"
+                                min="0.01"
+                                step="0.01"
+                                placeholder="Qty"
+                                required>
+
+                            <button type="submit">
+                                Use
+                            </button>
+
+                        </form>
+
+                    </td>
+
+
+                    <!-- ADD STOCK -->
+
+                    <td>
+
+                        <form class="small-form"
+                              method="POST"
+                              action="{{ url_for(
+                                  'project.add_material_stock',
+                                  material_id=material['id']
+                              ) }}">
+
+                            <input
+                                type="number"
+                                name="added_quantity"
+                                min="0.01"
+                                step="0.01"
+                                placeholder="Qty"
+                                required>
+
+                            <button type="submit">
+                                + Stock
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+            {% else %}
+
+                <p class="empty-text">
+                    No materials added yet.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             EXPENSE SECTION
+        ================================================== -->
+
+        <div class="expense-box">
+
+            <h2>Expenses</h2>
+
+
+            <!-- ADD EXPENSE -->
+
+            <form class="add-form"
+                  method="POST"
+                  action="{{ url_for(
+                      'project.add_expense',
+                      project_id=selected_project['id']
+                  ) }}">
+
+                <input
+                    type="date"
+                    name="expense_date"
+                    required>
+
+                <input
+                    type="text"
+                    name="expense_name"
+                    placeholder="Expense Name"
+                    required>
+
+                <input
+                    type="number"
+                    name="amount"
+                    placeholder="Amount ₹"
+                    min="0"
+                    step="0.01"
+                    required>
+
+                <button type="submit">
+                    + Add Expense
+                </button>
+
+            </form>
+
+
+            <!-- EXPENSE TABLE -->
+
+            {% if expenses %}
+
+            <table class="data-table">
+
+                <tr>
+                    <th>Date</th>
+                    <th>Expense</th>
+                    <th>Amount</th>
+                </tr>
+
+
+                {% for expense in expenses %}
+
+                <tr>
+
+                    <td>
+                        {{ expense['expense_date'] }}
+                    </td>
+
+                    <td>
+                        {{ expense['expense_name'] }}
+                    </td>
+
+                    <td>
+                        ₹ {{ expense['amount'] }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+            {% else %}
+
+                <p class="empty-text">
+                    No expenses added yet.
+                </p>
+
+            {% endif %}
+
+
+            <!-- AUTOMATIC TOTAL -->
+
+            <div class="total-expense">
+
+                <strong>
+                    Total Expense:
+                    ₹ {{ total_expense }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =================================================
+             NO PROJECT SELECTED
+        ================================================== -->
+
+        <div class="material-box">
+
+            <p>
+                Select a project above to manage
+                materials and expenses.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

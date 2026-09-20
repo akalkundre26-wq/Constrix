@@ -1,0 +1,517 @@
+<!-- ==========================================
+     ADMIN - LABOR SALARY PAGE
+     Shows monthly salary, advance,
+     partial payments and remaining amount
+     File: fronted/labor_salary.html
+=========================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Labor Salary</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+
+</head>
+
+<body>
+
+<main class="main-content">
+
+
+    <!-- ==========================================
+         PAGE TITLE
+    =========================================== -->
+
+    <h2>
+        Salary - {{ labor["full_name"] }}
+    </h2>
+
+
+    <!-- ==========================================
+         MONTH SELECT
+         Shows salary for selected month
+    =========================================== -->
+
+    <div class="attendance-month-box">
+
+        <form method="GET">
+
+            <label>Select Month:</label>
+
+            <input type="month"
+                   name="month"
+                   value="{{ selected_month }}"
+                   required>
+
+            <button type="submit">
+                View
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <h3>
+        {{ month_name }}
+    </h3>
+
+
+    <!-- ==========================================
+         SET SALARY RATE
+         Admin sets Daily Rate and OT Rate
+    =========================================== -->
+
+    <div class="salary-rate-box">
+
+        <h3>Set Salary Rate</h3>
+
+        <form method="POST"
+              action="{{ url_for(
+                    'labor_salary',
+                    labor_id=labor['id'],
+                    month=selected_month
+              ) }}">
+
+            <!-- Tells backend to save salary rate -->
+
+            <input type="hidden"
+                   name="action_type"
+                   value="save_rate">
+
+
+            <label>Daily Rate:</label>
+
+            <input type="number"
+                   name="daily_rate"
+                   value="{{ daily_rate }}"
+                   min="0"
+                   step="0.01"
+                   required>
+
+
+            <label>OT Rate / Hour:</label>
+
+            <input type="number"
+                   name="ot_rate"
+                   value="{{ ot_rate }}"
+                   min="0"
+                   step="0.01"
+                   required>
+
+
+            <button type="submit">
+                Save Rate
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ATTENDANCE SUMMARY
+         Used for salary calculation
+    =========================================== -->
+
+    <h3>Attendance Summary</h3>
+
+    <div class="salary-summary">
+
+        <div>
+
+            <strong>Present Days</strong>
+
+            <p>
+                {{ present_days }}
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <strong>Half Days</strong>
+
+            <p>
+                {{ half_days }}
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <strong>Absent Days</strong>
+
+            <p>
+                {{ absent_days }}
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <strong>OT Hours</strong>
+
+            <p>
+                {{ ot_hours }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SALARY CALCULATION
+    =========================================== -->
+
+    <div class="salary-calculation">
+
+        <h3>Salary Calculation</h3>
+
+
+        <p>
+            Present Salary:
+            ₹{{ "%.2f"|format(present_salary) }}
+        </p>
+
+
+        <p>
+            Half Day Salary:
+            ₹{{ "%.2f"|format(half_salary) }}
+        </p>
+
+
+        <p>
+            OT Salary:
+            ₹{{ "%.2f"|format(overtime_salary) }}
+        </p>
+
+
+        <hr>
+
+
+        <p>
+            <strong>
+                Gross Salary:
+                ₹{{ "%.2f"|format(gross_salary) }}
+            </strong>
+        </p>
+
+
+        <p>
+            Advance:
+            ₹{{ "%.2f"|format(total_advance) }}
+        </p>
+
+
+        <h3>
+            Net Payable:
+            ₹{{ "%.2f"|format(net_salary) }}
+        </h3>
+
+
+        <p>
+            Salary Paid:
+            ₹{{ "%.2f"|format(total_paid) }}
+        </p>
+
+
+        <h2>
+            Remaining:
+            ₹{{ "%.2f"|format(remaining_salary) }}
+        </h2>
+
+
+        <p>
+            Status:
+            <strong>
+                {{ payment_status }}
+            </strong>
+        </p>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ADD ADVANCE
+         Admin gives advance to labor
+         Advance is deducted from selected month
+    =========================================== -->
+
+    <div class="salary-rate-box">
+
+        <h3>Add Advance</h3>
+
+        <form method="POST"
+              action="{{ url_for(
+                    'labor_salary',
+                    labor_id=labor['id'],
+                    month=selected_month
+              ) }}">
+
+            <!-- Tells backend this form adds advance -->
+
+            <input type="hidden"
+                   name="action_type"
+                   value="add_advance">
+
+
+            <label>Advance Amount:</label>
+
+            <input type="number"
+                   name="advance_amount"
+                   min="1"
+                   step="0.01"
+                   required>
+
+
+            <label>Advance Date:</label>
+
+            <input type="date"
+                   name="advance_date"
+                   required>
+
+
+            <button type="submit">
+                Add Advance
+            </button>
+
+        </form>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ADVANCE HISTORY
+         Shows all advances for selected month
+    =========================================== -->
+
+    <div class="salary-calculation">
+
+        <h3>Advance History</h3>
+
+        {% if advances %}
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+
+
+            {% for advance in advances %}
+
+            <tr>
+
+                <td>
+                    {{ advance["advance_date"] }}
+                </td>
+
+                <td>
+                    ₹{{ "%.2f"|format(advance["amount"]) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            <tr>
+
+                <th>
+                    Total Advance
+                </th>
+
+                <th>
+                    ₹{{ "%.2f"|format(total_advance) }}
+                </th>
+
+            </tr>
+
+        </table>
+
+        {% else %}
+
+        <p>
+            No advance given for this month.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ADD SALARY PAYMENT
+         Supports partial and multiple payments
+    =========================================== -->
+
+    <div class="salary-rate-box">
+
+        <h3>Add Salary Payment</h3>
+
+
+        {% if remaining_salary > 0 %}
+
+        <form method="POST"
+              action="{{ url_for(
+                    'labor_salary',
+                    labor_id=labor['id'],
+                    month=selected_month
+              ) }}">
+
+            <!-- Tells backend this is salary payment -->
+
+            <input type="hidden"
+                   name="action_type"
+                   value="add_payment">
+
+
+            <label>Payment Amount:</label>
+
+            <input type="number"
+                   name="payment_amount"
+                   min="1"
+                   step="0.01"
+                   max="{{ remaining_salary }}"
+                   required>
+
+
+            <label>Payment Date:</label>
+
+            <input type="date"
+                   name="payment_date"
+                   required>
+
+
+            <button type="submit">
+                Add Salary Payment
+            </button>
+
+        </form>
+
+        {% else %}
+
+            {% if payment_status == "Paid" %}
+
+            <p>
+                Salary fully paid for this month.
+            </p>
+
+            {% else %}
+
+            <p>
+                No salary payment pending.
+            </p>
+
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SALARY PAYMENT HISTORY
+         Shows every payment made for selected month
+    =========================================== -->
+
+    <div class="salary-calculation">
+
+        <h3>Salary Payment History</h3>
+
+
+        {% if payments %}
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+                <th>Payment Date</th>
+                <th>Amount</th>
+            </tr>
+
+
+            {% for payment in payments %}
+
+            <tr>
+
+                <td>
+                    {{ payment["payment_date"] }}
+                </td>
+
+                <td>
+                    ₹{{ "%.2f"|format(payment["amount"]) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            <tr>
+
+                <th>
+                    Total Paid
+                </th>
+
+                <th>
+                    ₹{{ "%.2f"|format(total_paid) }}
+                </th>
+
+            </tr>
+
+        </table>
+
+        {% else %}
+
+        <p>
+            No salary payment made yet.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <br>
+
+
+    <!-- ==========================================
+         BACK BUTTON
+    =========================================== -->
+
+    <a href="{{ url_for('labor') }}">
+        Back to Labor List
+    </a>
+
+
+</main>
+
+</body>
+
+</html>

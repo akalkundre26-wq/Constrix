@@ -1,0 +1,416 @@
+<!-- ==========================================
+     LABOR - MY SALARY PAGE
+     View-only monthly salary details
+     Shows advance, paid amount,
+     remaining amount and payment history
+     File: fronted/labor_my_salary.html
+=========================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>My Salary</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+
+</head>
+
+<body>
+
+<main class="main-content">
+
+
+    <!-- ==========================================
+         PAGE TITLE
+    =========================================== -->
+
+    <h2>My Salary</h2>
+
+    <p>
+        Welcome,
+        <strong>{{ labor["full_name"] }}</strong>
+    </p>
+
+
+    <!-- ==========================================
+         MONTH SELECT
+    =========================================== -->
+
+    <div class="attendance-month-box">
+
+        <form method="GET">
+
+            <label>Select Month:</label>
+
+            <input type="month"
+                   name="month"
+                   value="{{ selected_month }}">
+
+            <button type="submit">
+                View
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <h3 class="calendar-title">
+        {{ month_name }}
+    </h3>
+
+
+    <!-- ==========================================
+         ATTENDANCE SUMMARY
+    =========================================== -->
+
+    <div class="attendance-summary">
+
+        <div class="summary-box">
+
+            <h3>Present Days</h3>
+
+            <p>{{ present_days }}</p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>Half Days</h3>
+
+            <p>{{ half_days }}</p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>Absent Days</h3>
+
+            <p>{{ absent_days }}</p>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <h3>OT Hours</h3>
+
+            <p>{{ ot_hours }}</p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SALARY DETAILS
+    =========================================== -->
+
+    <div class="calendar-box">
+
+        <h3>Salary Details</h3>
+
+        <table border="1"
+               cellpadding="12"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+
+                <th>Daily Rate</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(daily_rate) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>OT Rate</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(ot_rate) }} / hour
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Present Salary</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(present_salary) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Half Day Salary</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(half_salary) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Overtime Salary</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(overtime_salary) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Gross Salary</th>
+
+                <td>
+                    <strong>
+                        ₹ {{ "%.2f"|format(gross_salary) }}
+                    </strong>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Advance Paid</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(total_advance) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Net Payable</th>
+
+                <td>
+                    <strong>
+                        ₹ {{ "%.2f"|format(net_salary) }}
+                    </strong>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Salary Paid</th>
+
+                <td>
+                    ₹ {{ "%.2f"|format(total_paid) }}
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Remaining Salary</th>
+
+                <td>
+                    <strong>
+                        ₹ {{ "%.2f"|format(remaining_salary) }}
+                    </strong>
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <th>Status</th>
+
+                <td>
+                    <strong>
+                        {{ payment_status }}
+                    </strong>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ADVANCE HISTORY
+         View-only for labor
+    =========================================== -->
+
+    <div class="calendar-box">
+
+        <h3>Advance History</h3>
+
+
+        {% if advances %}
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+
+                <th>Date</th>
+
+                <th>Amount</th>
+
+            </tr>
+
+
+            {% for advance in advances %}
+
+            <tr>
+
+                <td>
+                    {{ advance["advance_date"] }}
+                </td>
+
+                <td>
+                    ₹ {{ "%.2f"|format(advance["amount"]) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            <tr>
+
+                <th>Total Advance</th>
+
+                <th>
+                    ₹ {{ "%.2f"|format(total_advance) }}
+                </th>
+
+            </tr>
+
+        </table>
+
+
+        {% else %}
+
+        <p>
+            No advance received for this month.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SALARY PAYMENT HISTORY
+         View-only for labor
+    =========================================== -->
+
+    <div class="calendar-box">
+
+        <h3>Salary Payment History</h3>
+
+
+        {% if payments %}
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+
+                <th>Payment Date</th>
+
+                <th>Amount</th>
+
+            </tr>
+
+
+            {% for payment in payments %}
+
+            <tr>
+
+                <td>
+                    {{ payment["payment_date"] }}
+                </td>
+
+                <td>
+                    ₹ {{ "%.2f"|format(payment["amount"]) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            <tr>
+
+                <th>Total Paid</th>
+
+                <th>
+                    ₹ {{ "%.2f"|format(total_paid) }}
+                </th>
+
+            </tr>
+
+        </table>
+
+
+        {% else %}
+
+        <p>
+            Salary payment not received yet.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <br>
+
+
+    <!-- ==========================================
+         BACK BUTTON
+    =========================================== -->
+
+    <a href="{{ url_for('labor_dashboard') }}"
+       class="back-btn">
+
+        Back to Dashboard
+
+    </a>
+
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Labor Salary</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+</head>
+
+<body>
+
+<main class="main-content">
+
+    <h2>Salary - {{ labor["full_name"] }}</h2>
+
+    <div class="salary-rate-box">
+
+        <h3>Set Salary Rate</h3>
+
+        <form method="POST">
+
+            <label>Daily Rate:</label>
+
+            <input type="number"
+                   name="daily_rate"
+                   value="{{ daily_rate }}"
+                   min="0"
+                   required>
+
+            <label>OT Rate / Hour:</label>
+
+            <input type="number"
+                   name="ot_rate"
+                   value="{{ ot_rate }}"
+                   min="0"
+                   required>
+
+            <button type="submit">
+                Save Rate
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <h3>Attendance Summary</h3>
+
+    <div class="salary-summary">
+
+        <div>
+            <strong>Present Days</strong>
+            <p>{{ present_days }}</p>
+        </div>
+
+        <div>
+            <strong>Half Days</strong>
+            <p>{{ half_days }}</p>
+        </div>
+
+        <div>
+            <strong>Absent Days</strong>
+            <p>{{ absent_days }}</p>
+        </div>
+
+        <div>
+            <strong>OT Hours</strong>
+            <p>{{ ot_hours }}</p>
+        </div>
+
+    </div>
+
+
+    <div class="salary-calculation">
+
+        <h3>Salary Calculation</h3>
+
+        <p>
+            Present Salary:
+            rs.{{ "%.2f"|format(present_salary) }}
+        </p>
+
+        <p>
+            Half Day Salary:
+            ₹{{ "%.2f"|format(half_salary) }}
+        </p>
+
+        <p>
+            OT Salary:
+            ₹{{ "%.2f"|format(overtime_salary) }}
+        </p>
+
+        <hr>
+
+        <h2>
+            Net Salary:
+            ₹{{ "%.2f"|format(net_salary) }}
+        </h2>
+
+    </div>
+
+    <a href="{{ url_for('labor') }}">
+        Back to Labor List
+    </a>
+
+</main>
+
+</body>
+</html>

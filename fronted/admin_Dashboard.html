@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Dashboard - Constrix</title>
+
+    <link rel="stylesheet" href="/CSS/admin.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Smart Construction Tracking</p>
+    </div>
+
+    <div class="header-user">
+
+        <strong>
+            {{ session['full_name'] }}
+        </strong>
+
+        <span>
+            {{ session['company_name'] }}
+        </span>
+
+    </div>
+
+</header>
+
+
+
+<div class="dashboard">
+
+
+    <aside>
+    
+
+        <a class="active"
+           href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+       <a href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+       <a href="{{ url_for('labor') }}">Labor</a>
+
+        <a href="#">
+            Subcontractor
+        </a>
+
+        <!-- =====================================================
+     MATERIAL & EXPENSES LINK
+     File: admin_dashboard.html
+====================================================== -->
+<a href="{{ url_for('project.material_expenses') }}">
+    Material & Expenses
+</a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a href="#">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <main>
+
+
+        <div class="welcome">
+
+            <h1>
+                Welcome, {{ session['full_name'] }}
+            </h1>
+
+            <p>
+                Here is your construction project overview.
+            </p>
+
+            <div class="contractor-code">
+
+                Contractor Code:
+
+                <strong>
+                    {{ session['contractor_code'] }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+       <div class="cards">
+
+    <div class="card">
+        <h3>Total Projects</h3>
+        <p>{{ total_projects }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Ongoing Projects</h3>
+        <p>{{ ongoing_projects }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Labor</h3>
+        <p>{{ total_labor }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Customers</h3>
+        <p>{{ total_customers }}</p>
+    </div>
+
+</div>
+
+
+
+        <div class="dashboard-content">
+
+
+            <div class="recent-projects">
+
+
+                <div class="section-heading">
+
+                    <h2>
+                        Recent Projects
+                    </h2>
+
+                   <a href="{{ url_for('project.projects') }}">
+    View All
+</a>
+
+                </div>
+
+
+                {% if recent_projects %}
+
+
+                    {% for project in recent_projects %}
+
+                    <div class="project-item">
+
+                        <div>
+
+                            <h3>
+                                {{ project['project_name'] }}
+                            </h3>
+
+                            <p>
+                                Customer:
+                                {{ project['customer_name'] }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="project-status">
+
+                            <span>
+                                {{ project['status'] }}
+                            </span>
+
+                            <strong>
+                                {{ project["ai_progress"] }}%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <div class="empty-message">
+
+                        No projects added yet.
+
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <div class="recent-activity">
+
+
+                <h2>
+                    Recent Activity
+                </h2>
+
+
+                {% if recent_activity %}
+
+
+                    {% for activity in recent_activity %}
+
+                        <div class="activity-item">
+
+                            <p>
+                                {{ activity['activity'] }}
+                            </p>
+
+                            <small>
+                                {{ activity['created_at'] }}
+                            </small>
+
+                        </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <div class="empty-message">
+
+                        No recent activity.
+
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

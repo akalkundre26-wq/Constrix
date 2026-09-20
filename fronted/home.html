@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Constrix</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+
+<body>
+
+    <header class="navbar">
+       <div class="logo">
+    <img src="/CSS/images/Logo.png.png" alt="Constrix "class="brand-logo">
+</div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+           <a href="{{ url_for('login') }}">Login</a>
+           
+        </nav>
+    </header>
+
+
+    <section id="home" class="hero">
+
+        <div class="hero-content">
+
+            <p class="small-title">SMART CONSTRUCTION TRACKING</p>
+
+            <h1>
+                Track Your Construction
+                <span>Projects Smarter</span>
+            </h1>
+
+            <p class="hero-text">
+                Track project progress, daily updates, labor work
+                and customer information from one simple platform.
+            </p>
+
+           <a href="{{ url_for('login') }}">
+    <button class="main-btn">Get Started</button>
+</a>
+
+        </div>
+
+    </section>
+
+
+    <section class="features">
+
+        <div class="feature-card">
+            <h3>📊 Project Tracking</h3>
+            <p>Track ongoing projects and overall work progress.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>📅 Daily Updates</h3>
+            <p>Keep daily construction work and progress updated.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>👷 Team Connection</h3>
+            <p>Connect contractors, labor and customers.</p>
+        </div>
+
+        <div class="feature-card">
+            <h3>🔒 Secure Access</h3>
+            <p>Separate login access for each type of user.</p>
+        </div>
+
+    </section>
+
+
+   <section id="about" class="about">
+
+    <div class="about-content">
+
+        <span class="about-label">ABOUT CONSTRIX</span>
+
+        <h2>
+            Construction progress.<br>
+            <span>Clear, connected and simple.</span>
+        </h2>
+
+        <p>
+            Constrix brings contractors, labor and customers
+            together on one platform, making construction
+            progress easier to track and understand.
+        </p>
+
+    </div>
+
+</section>
+
+   <footer>
+    <p>© 2026 Constrix | Smart Construction Project Tracking System</p>
+    <p class="footer-credit">Developed by Amar Appaji Kalkundre</p>
+</footer>
+
+</body>
+
+</html>

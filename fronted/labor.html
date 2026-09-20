@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor - Constrix</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Admin Panel</p>
+    </div>
+</header>
+
+
+<div class="dashboard">
+
+    <aside>
+
+        <a href="/admin/dashboard">Dashboard</a>
+        <a href="/admin/projects">Projects</a>
+        <a href="/admin/customers">Customers</a>
+        <a href="/admin/labor" class="active">Labor</a>
+        <a href="#">Subcontractor</a>
+
+        <a href="{{ url_for('project.material_expenses') }}">
+            Material & Expenses
+        </a>
+
+        <a href="/admin/ai-planner">AI Work Planner</a>
+        <a href="#">Profile</a>
+        <a href="/logout">Logout</a>
+
+    </aside>
+
+
+    <main>
+
+        <div class="page-header">
+
+            <h1>Labor</h1>
+
+            <a href="/admin/attendance" class="attendance-btn">
+                Mark Today Attendance
+            </a>
+
+        </div>
+
+
+        <div class="labor-table">
+
+            <table>
+
+                <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Username</th>
+
+                    <!-- Subcontractor Permissions -->
+                    <th>Project Access</th>
+                    <th>Material & Expenses</th>
+
+                    <th>Action</th>
+                </tr>
+
+
+                {% for labor in labors %}
+
+                <tr>
+
+                    <td>{{ labor["full_name"] }}</td>
+
+                    <td>{{ labor["mobile"] }}</td>
+
+                    <td>{{ labor["username"] }}</td>
+
+
+                    <!-- ========================================= -->
+                    <!-- SUBCONTRACTOR PERMISSIONS -->
+                    <!-- ========================================= -->
+
+                    <td colspan="2">
+
+                        <form method="POST"
+                              action="{{ url_for(
+                                  'labor_permissions',
+                                  labor_id=labor['id']
+                              ) }}"
+                              style="display:flex;
+                                     gap:15px;
+                                     align-items:center;">
+
+                            <label>
+
+                                <input
+                                    type="checkbox"
+                                    name="project_access"
+                                    {% if labor["project_access"] == 1 %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                Project
+
+                            </label>
+
+
+                            <label>
+
+                                <input
+                                    type="checkbox"
+                                    name="material_access"
+                                    {% if labor["material_access"] == 1 %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                Material
+
+                            </label>
+
+
+                            <button type="submit"
+                                    class="edit-btn">
+                                Save
+                            </button>
+
+                        </form>
+
+                    </td>
+
+
+                    <!-- Existing Actions -->
+
+                    <td>
+
+                        <div class="action-buttons">
+
+                            <a href="{{ url_for(
+                                'assign_work',
+                                labor_id=labor['id']
+                            ) }}"
+                               class="assign-btn">
+
+                                Assign Work
+
+                            </a>
+
+
+                            <a href="{{ url_for(
+                                'labor_attendance',
+                                labor_id=labor['id']
+                            ) }}"
+                               class="attendance-btn">
+
+                                Attendance
+
+                            </a>
+
+
+                            <a href="{{ url_for(
+                                'labor_salary',
+                                labor_id=labor['id']
+                            ) }}"
+                               class="salary-btn">
+
+                                Salary
+
+                            </a>
+
+                            <a href="#"
+                               class="delete-btn">
+                                Delete
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                {% else %}
+
+                <tr>
+
+                    <td colspan="6">
+                        No labor added yet.
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

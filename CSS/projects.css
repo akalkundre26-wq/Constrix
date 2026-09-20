@@ -1,0 +1,615 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    color: #222;
+}
+
+
+header {
+    height: 75px;
+    background: #1f2937;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+}
+
+
+header h2 {
+    margin: 0;
+}
+
+
+header p {
+    margin: 4px 0 0;
+    color: #cbd5e1;
+}
+
+
+.header-user {
+    text-align: right;
+}
+
+
+.header-user strong {
+    display: block;
+}
+
+
+.header-user span {
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+
+.dashboard {
+    display: flex;
+    min-height: calc(100vh - 75px);
+}
+
+
+/* SIDEBAR */
+
+aside {
+    width: 230px;
+    background: #202b3c;
+    padding-top: 20px;
+}
+
+
+.contractor-code {
+    padding: 5px 22px 20px;
+    color: white;
+}
+
+
+.contractor-code small {
+    display: block;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+
+.contractor-code strong {
+    color: #f4b942;
+}
+
+
+aside a {
+    display: block;
+
+    padding: 15px 22px;
+
+    color: white;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+
+aside a:hover {
+    background: #344154;
+}
+
+
+aside .active {
+    background: #2f80ed;
+}
+
+
+/* MAIN */
+
+main {
+    flex: 1;
+    padding: 30px;
+}
+
+
+.page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+
+.page-heading h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+
+.page-heading p {
+    color: #666;
+    margin-top: 7px;
+}
+
+
+.add-project-btn {
+    background: #2f80ed;
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px 20px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+
+.add-project-btn:hover {
+    background: #1768c7;
+}
+
+
+/* PROJECT GRID */
+
+.project-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(280px, 1fr));
+
+    gap: 22px;
+}
+
+
+/* ADD PROJECT CARD */
+
+.add-project-card {
+    min-height: 390px;
+
+    border: 2px dashed #75aef5;
+
+    border-radius: 12px;
+
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    text-decoration: none;
+    color: #222;
+
+    transition: 0.2s;
+}
+
+
+.add-project-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 5px 14px rgba(0,0,0,0.08);
+}
+
+
+.plus-circle {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: #2f80ed;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 45px;
+
+    margin-bottom: 15px;
+}
+
+
+.add-project-card h2 {
+    color: #175cad;
+    margin-bottom: 7px;
+}
+
+
+.add-project-card p {
+    color: #777;
+}
+
+
+/* PROJECT CARD */
+
+.project-card {
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+
+    transition: 0.2s;
+}
+
+
+.project-card:hover {
+    transform: translateY(-3px);
+}
+
+
+.project-image {
+    height: 180px;
+
+    position: relative;
+
+    background: #ddd;
+}
+
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.no-image {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    color: #777;
+}
+
+
+.status {
+    position: absolute;
+
+    right: 10px;
+    top: 10px;
+
+    background: #24a148;
+    color: white;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+}
+
+
+.project-info {
+    padding: 18px;
+}
+
+
+.project-info h2 {
+    margin: 0 0 14px;
+
+    font-size: 21px;
+}
+
+
+.project-info p {
+    margin: 9px 0;
+
+    color: #555;
+
+    font-size: 14px;
+}
+
+
+/* PROGRESS */
+
+.progress-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+
+.progress-bar {
+    flex: 1;
+
+    height: 8px;
+
+    background: #e5e7eb;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+.progress-fill {
+    height: 100%;
+
+    background: #2f80ed;
+
+    border-radius: 10px;
+}
+
+
+/* BUTTONS */
+
+.project-actions {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+.project-actions a {
+    flex: 1;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    padding: 9px 5px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+}
+
+
+.view-btn {
+    background: #eef5ff;
+    color: #1768c7;
+}
+
+
+.edit-btn {
+    background: #f3f4f6;
+    color: #333;
+}
+
+
+.delete-btn {
+    background: #fff0f0;
+    color: #d62828;
+}
+
+
+.empty-project-message {
+    margin-top: 25px;
+
+    background: white;
+
+    padding: 25px;
+
+    text-align: center;
+
+    border-radius: 10px;
+
+    color: #666;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    aside {
+        width: 180px;
+    }
+
+    main {
+        padding: 18px;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+}
+
+/* =========================================
+   ADD PROJECT FORM
+========================================= */
+
+.project-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+
+.form-section {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0,0,0,0.08);
+}
+
+
+.form-section h2 {
+    margin-top: 0;
+
+    margin-bottom: 22px;
+
+    font-size: 20px;
+}
+
+
+.form-section label {
+    display: block;
+
+    margin-top: 16px;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #d7dce2;
+
+    border-radius: 6px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+}
+
+
+.form-section textarea {
+
+    min-height: 90px;
+
+    resize: vertical;
+}
+
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+}
+
+
+.image-upload-box {
+
+    border:
+        2px dashed
+        #90baf0;
+
+    padding: 30px;
+
+    text-align: center;
+
+    border-radius: 9px;
+
+    background: #f8fbff;
+}
+
+
+.image-upload-box p {
+
+    color: #777;
+
+    margin-bottom: 0;
+}
+
+
+.save-project-btn {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #2f80ed;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.save-project-btn:hover {
+
+    background: #1768c7;
+}
+
+
+.back-project-btn {
+
+    text-decoration: none;
+
+    background: white;
+
+    color: #333;
+
+    border:
+        1px solid #ddd;
+
+    padding: 11px 16px;
+
+    border-radius: 7px;
+}
+
+
+@media (max-width: 900px) {
+
+    .project-form {
+
+        grid-template-columns: 1fr;
+
+    }
+
+}
+
+.project-actions form {
+    margin: 0;
+}
+
+.delete-btn {
+    width: 100%;
+    border: none;
+    background: #fff0f0;
+    color: #d62828;
+    padding: 9px 5px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #ffe1e1;
+}

@@ -1,0 +1,443 @@
+.attendance-btn {
+    display: inline-block;
+    padding: 12px 18px;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.attendance-btn:hover {
+    background: #157347;
+}
+
+.attendance-summary {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.summary-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 130px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.summary-box h3 {
+    margin: 0 0 8px;
+}
+
+.calendar-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.calendar-day {
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    min-height: 70px;
+}
+
+.calendar-day strong,
+.calendar-day span,
+.calendar-day small {
+    display: block;
+}
+
+.present {
+    background: #d1e7dd;
+}
+
+.ot {
+    background: #cfe2ff;
+}
+
+.half {
+    background: #fff3cd;
+}
+
+.absent {
+    background: #f8d7da;
+}
+
+.off {
+    background: #e9ecef;
+}
+
+.legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* =========================================
+   LABOR ATTENDANCE PAGE
+========================================= */
+
+.attendance-summary {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+
+.summary-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 130px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+
+.summary-box h3 {
+    margin: 0 0 8px;
+}
+
+
+.summary-box p {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.calendar-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+.calendar-day {
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+    min-height: 80px;
+    border: 1px solid #ddd;
+}
+
+
+.calendar-day strong {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+
+.calendar-day span {
+    display: block;
+    font-weight: bold;
+}
+
+
+.calendar-day small {
+    display: block;
+    margin-top: 5px;
+}
+
+
+.present {
+    background: #d1e7dd;
+}
+
+
+.ot {
+    background: #cfe2ff;
+}
+
+
+.half {
+    background: #fff3cd;
+}
+
+
+.absent {
+    background: #f8d7da;
+}
+
+
+.off {
+    background: #e9ecef;
+}
+
+
+.legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 16px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+
+.back-btn:hover {
+    background: #5c636a;
+}
+
+/* ==============================
+   LABOR SALARY
+============================== */
+
+.salary-btn {
+    display: inline-block;
+    padding: 10px 14px;
+    background: #198754;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.salary-rate-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.salary-rate-box input {
+    padding: 10px;
+    margin: 8px;
+}
+
+.salary-rate-box button {
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.salary-summary {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.salary-summary div {
+    background: white;
+    padding: 15px;
+    min-width: 130px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.salary-summary p {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.salary-calculation {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+/* =========================================
+   PROPER MONTHLY ATTENDANCE CALENDAR
+========================================= */
+
+.attendance-month-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.attendance-month-box input {
+    padding: 9px;
+    margin-left: 10px;
+}
+
+.attendance-month-box button {
+    padding: 10px 15px;
+    margin-left: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.calendar-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.calendar-weekdays div {
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+
+.monthly-calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+
+.month-day {
+    min-height: 105px;
+    padding: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+}
+
+
+.empty-day {
+    background: #f8f9fa;
+    border: none;
+}
+
+
+.day-number {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+
+.day-status {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+.month-day small {
+    display: block;
+    margin-top: 4px;
+}
+
+
+.no-record {
+    color: #999;
+}
+
+
+.ot-text {
+    font-weight: bold;
+}
+
+
+/* Attendance Colors */
+
+.month-day.present {
+    background: #d1e7dd;
+}
+
+.month-day.ot {
+    background: #cfe2ff;
+}
+
+.month-day.half {
+    background: #fff3cd;
+}
+
+.month-day.absent {
+    background: #f8d7da;
+}
+
+.month-day.off {
+    background: #e9ecef;
+}
+
+/* ===== LABOR LIST ACTION BUTTONS ===== */
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-buttons a {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+}
+
+/* Assign Work */
+.action-buttons .assign-btn {
+    background: #17a2b8;
+}
+
+/* Attendance */
+.action-buttons .attendance-btn {
+    background: #3b82f6;
+}
+
+/* Salary */
+.action-buttons .salary-btn {
+    background: #198754;
+}
+
+/* View */
+.action-buttons .view-btn {
+    background: #0d6efd;
+}
+
+/* Edit */
+.action-buttons .edit-btn {
+    background: #f0ad00;
+}
+
+/* Delete */
+.action-buttons .delete-btn {
+    background: #dc3545;
+}
+
+.action-buttons a:hover {
+    opacity: 0.85;
+}

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>My Project - Constrix</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='customer.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="customer-header">
+
+    <h2>CONSTRIX</h2>
+
+    <div>
+        Project
+
+        &nbsp;&nbsp;
+
+        <a href="{{ url_for('customer_dashboard') }}">
+            Dashboard
+        </a>
+    </div>
+
+</div>
+
+
+<main class="customer-main">
+
+
+{% if project %}
+
+
+    <!-- PAGE HEADING -->
+
+    <div class="customer-project-heading">
+
+        <div>
+
+            <h1>{{ project["project_name"] }}</h1>
+
+            <p>
+                Your construction project details and updates.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('customer_dashboard') }}"
+           class="customer-btn">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+
+
+    <!-- PROJECT PHOTO + OVERVIEW -->
+
+    <div class="customer-project-top">
+
+
+        <!-- MAIN PROJECT PHOTO -->
+
+        <div class="customer-main-photo">
+
+            {% if project["image"] %}
+
+                <img
+                    src="{{ url_for(
+                        'project.project_image',
+                        filename=project['image']
+                    ) }}"
+                    alt="Project Photo"
+                    onclick="openPhoto(this.src)">
+
+            {% else %}
+
+                <div class="customer-no-photo">
+                    No Project Photo
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- PROJECT OVERVIEW -->
+
+        <div class="customer-box customer-project-overview">
+
+            <h2>Project Overview</h2>
+
+            <p>
+                <strong>Customer:</strong>
+                {{ customer["full_name"] }}
+            </p>
+
+            <p>
+                <strong>Site Address:</strong>
+                {{ project["site_address"] }}
+            </p>
+
+            <p>
+                <strong>Start Date:</strong>
+                {{ project["start_date"] }}
+            </p>
+
+            <p>
+                <strong>Expected End Date:</strong>
+                {{ project["end_date"] }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ project["status"] }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         LEFT PROJECT CONTENT + RIGHT WORK PLAN
+    =================================================== -->
+
+    <div class="customer-project-layout">
+
+
+        <!-- ================= LEFT SIDE ================= -->
+
+        <div class="customer-project-left">
+
+
+            <!-- PROJECT PROGRESS -->
+            <!-- Progress comes from completed AI tasks -->
+
+            <div class="customer-box">
+
+                <h2>Project Progress</h2>
+
+                <div class="customer-progress">
+
+                    <div
+                        class="customer-progress-fill"
+                        style="width: {{ ai_progress }}%;">
+                    </div>
+
+                </div>
+
+                <p>
+                    <strong>
+                        {{ ai_progress }}% Completed
+                    </strong>
+                </p>
+
+            </div>
+
+
+
+            <!-- PROJECT DESCRIPTION -->
+
+            <div class="customer-box">
+
+                <h2>Project Description</h2>
+
+                <p>
+                    {{ project["description"] or
+                       "No project description added." }}
+                </p>
+
+            </div>
+
+
+
+            <!-- DAILY UPDATES -->
+
+            <div class="customer-box">
+
+                <h2>Daily Updates</h2>
+
+
+                {% if updates %}
+
+
+                    {% for item in updates %}
+
+
+                        <div class="customer-update-card">
+
+
+                            <!-- DATE + WORK DETAILS -->
+
+                            <div class="customer-update-info">
+
+                                <h3>
+                                    {{ item["update"]["update_date"] }}
+                                </h3>
+
+                                <p>
+                                    {{ item["update"]["work_details"] }}
+                                </p>
+
+                            </div>
+
+
+                            <!-- PHOTOS -->
+
+                            {% if item["photos"] %}
+
+                                <div class="customer-update-photos">
+
+                                    {% for photo in item["photos"] %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'project.project_image',
+                                                filename=photo['image']
+                                            ) }}"
+                                            class="customer-update-photo"
+                                            onclick="openPhoto(this.src)"
+                                            alt="Site Photo">
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p>
+                        No daily updates added yet.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= RIGHT SIDE ================= -->
+
+        <div class="customer-project-right">
+
+            <div class="customer-box work-plan-box">
+
+                <h2>Work Plan</h2>
+
+                <p class="work-plan-info">
+                    Construction work schedule
+                </p>
+
+
+                <!-- ==================================================
+                     REAL AI WORK PLAN
+                     Read only for customer
+                =================================================== -->
+
+                {% if work_plans %}
+
+                    {% for work_name, tasks in work_plans.items() %}
+
+
+                        <!-- WORK NAME -->
+
+                        <h3 style="margin-top: 22px; margin-bottom: 15px;">
+                            {{ work_name }}
+                        </h3>
+
+
+                        <!-- TASKS -->
+
+                        {% for task in tasks %}
+
+
+                            <div class="work-plan-item">
+
+                                <strong>
+                                    {{ task["task_name"] }}
+                                </strong>
+
+
+                                <!-- COMPLETED -->
+
+                                {% if task["status"] == "Completed" %}
+
+                                    <span class="work-status completed">
+                                        Completed
+                                    </span>
+
+
+                                <!-- IN PROGRESS -->
+
+                                {% elif task["status"] == "In Progress" %}
+
+                                    <span class="work-status working">
+                                        In Progress
+                                    </span>
+
+
+                                <!-- PENDING -->
+
+                                {% else %}
+
+                                    <span class="work-status pending">
+                                        Pending
+                                    </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        {% endfor %}
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p>
+                        No work plan available yet.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+{% else %}
+
+
+    <div class="customer-box">
+
+        <h2>My Project</h2>
+
+        <p>
+            No project assigned yet.
+        </p>
+
+    </div>
+
+
+{% endif %}
+
+
+</main>
+
+
+
+<!-- LARGE PHOTO VIEW -->
+
+<div id="photoModal"
+     class="customer-photo-modal"
+     onclick="closePhoto()">
+
+    <span class="customer-photo-close">
+        ×
+    </span>
+
+    <img id="largePhoto">
+
+</div>
+
+
+
+<script>
+
+function openPhoto(photoSrc) {
+
+    document.getElementById(
+        "photoModal"
+    ).style.display = "flex";
+
+    document.getElementById(
+        "largePhoto"
+    ).src = photoSrc;
+
+}
+
+
+function closePhoto() {
+
+    document.getElementById(
+        "photoModal"
+    ).style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+
+</html>

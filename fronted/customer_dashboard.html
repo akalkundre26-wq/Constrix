@@ -1,0 +1,343 @@
+<!-- =====================================================
+     CUSTOMER DASHBOARD - CONSTRIX
+     Shows Profile, Project and Customer Queries
+===================================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Customer Dashboard - Constrix</title>
+
+    <!-- Admin Common CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <!-- Customer Dashboard CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='customer.css') }}">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     CUSTOMER HEADER
+===================================================== -->
+
+<div class="customer-header">
+
+    <h2>CONSTRIX</h2>
+
+    <div>
+
+        Welcome, {{ customer["full_name"] }}
+
+        <a href="{{ url_for('customer_project') }}">
+            Project
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     CUSTOMER DASHBOARD
+===================================================== -->
+
+<main class="customer-main">
+
+    <h2>Customer Dashboard</h2>
+
+
+    <div class="customer-dashboard-grid">
+
+
+        <!-- =================================================
+             LEFT SIDE
+        ================================================== -->
+
+        <div class="customer-left">
+
+
+            <!-- =============================================
+                 CUSTOMER PROFILE
+            ============================================== -->
+
+            <div class="customer-box">
+
+                <h3>My Profile</h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ customer["full_name"] }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ customer["email"] }}
+                </p>
+
+                <p>
+                    <strong>Mobile:</strong>
+                    {{ customer["mobile"] }}
+                </p>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 CUSTOMER PROJECT
+            ============================================== -->
+
+            <div class="customer-box">
+
+                <h3>My Project</h3>
+
+
+                {% if project %}
+
+
+                    <p>
+                        <strong>Project:</strong>
+                        {{ project["project_name"] }}
+                    </p>
+
+
+                    <p>
+                        <strong>Site Address:</strong>
+                        {{ project["site_address"] }}
+                    </p>
+
+
+                    <p>
+                        <strong>Start Date:</strong>
+                        {{ project["start_date"] }}
+                    </p>
+
+
+                    <p>
+                        <strong>Expected End Date:</strong>
+                        {{ project["end_date"] }}
+                    </p>
+
+
+                    <p>
+                        <strong>Status:</strong>
+                        {{ project["status"] }}
+                    </p>
+
+
+
+                    <!-- PROJECT PROGRESS -->
+
+                    <p>
+                        <strong>Progress</strong>
+                    </p>
+
+
+                    <div class="customer-progress">
+
+                        <div
+                            class="customer-progress-fill"
+                            style="width: {{ ai_progress }}%;">
+                        </div>
+
+                    </div>
+
+
+                    <p>
+                        {{ ai_progress }}% Completed
+                    </p>
+
+
+
+                    <!-- PROJECT BUTTON -->
+
+                    <div class="project-buttons">
+
+                        <a href="{{ url_for('customer_project') }}"
+                           class="customer-btn">
+
+                            View Project
+
+                        </a>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <p>
+                        No project has been assigned yet.
+                    </p>
+
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT SIDE - QUERIES & MESSAGES
+        ================================================== -->
+
+        <div class="customer-right">
+
+
+            <div class="customer-box">
+
+
+                <h3>Queries & Messages</h3>
+
+
+                <p class="query-info">
+                    Ask your contractor about your project.
+                </p>
+
+
+
+                <!-- =========================================
+                     CUSTOMER QUESTION FORM
+                     Sends question to Flask backend
+                ========================================== -->
+
+                <form method="POST">
+
+
+                    <textarea
+                        name="message"
+                        placeholder="Type your question here..."
+                        rows="4"
+                        required></textarea>
+
+
+                    <button
+                        type="submit"
+                        class="customer-btn">
+
+                        Send Question
+
+                    </button>
+
+
+                </form>
+
+
+
+                <hr>
+
+
+
+                <!-- =========================================
+                     PREVIOUS MESSAGES
+                     Shows saved questions and Admin replies
+                ========================================== -->
+
+                <h4>Previous Messages</h4>
+
+
+                {% if queries %}
+
+
+                    {% for query in queries %}
+
+
+                        <div class="message-box">
+
+
+                            <!-- CUSTOMER QUESTION -->
+
+                            <p>
+
+                                <strong>You:</strong>
+
+                                {{ query["message"] }}
+
+                            </p>
+
+
+
+                            <!-- ADMIN REPLY -->
+
+                            {% if query["admin_reply"] %}
+
+
+                                <p>
+
+                                    <strong>Contractor:</strong>
+
+                                    {{ query["admin_reply"] }}
+
+                                </p>
+
+
+                            {% else %}
+
+
+                                <p class="no-message">
+
+                                    Waiting for reply...
+
+                                </p>
+
+
+                            {% endif %}
+
+
+
+                            <!-- MESSAGE DATE -->
+
+                            <small>
+
+                                {{ query["created_at"] }}
+
+                            </small>
+
+
+                        </div>
+
+
+                    {% endfor %}
+
+
+                {% else %}
+
+
+                    <p class="no-message">
+
+                        No messages yet.
+
+                    </p>
+
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fb;
+    color: #222;
+}
+
+
+/* ROLE SELECTION PAGE */
+
+.login-page {
+    min-height: 100vh;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.brand h1 {
+    color: #17212b;
+    font-size: 32px;
+    margin-bottom: 25px;
+}
+
+.brand h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.brand p {
+    color: #777;
+    margin-bottom: 40px;
+}
+
+.role-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.role-card {
+    width: 260px;
+    background-color: white;
+
+    padding: 35px 20px;
+    border-radius: 12px;
+
+    text-decoration: none;
+    color: #222;
+
+    box-shadow: 0 5px 20px rgba(0,0,0,0.10);
+
+    transition: 0.3s;
+}
+
+.role-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.role-card h2 {
+    margin-bottom: 8px;
+}
+
+.role-card p {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.role-card span {
+    display: block;
+
+    background-color: #2f80ed;
+    color: white;
+
+    padding: 11px;
+
+    border-radius: 6px;
+}
+
+
+/* LOGIN / REGISTER FORM */
+
+.form-container {
+    width: 420px;
+    max-width: 90%;
+
+    margin: 60px auto;
+    padding: 35px;
+
+    background-color: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+}
+
+.form-container h1 {
+    text-align: center;
+    color: #17212b;
+    margin-bottom: 20px;
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.form-container > p {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+form label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 7px;
+
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    font-size: 15px;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #2f80ed;
+}
+
+form button {
+    width: 100%;
+
+    margin-top: 25px;
+    padding: 13px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #2f80ed;
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #1769cc;
+}
+
+.register-text {
+    margin-top: 20px;
+}
+
+.register-text a {
+    color: #2f80ed;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+
+    margin-top: 25px;
+
+    color: #555;
+    text-decoration: none;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    width: 380px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+.login-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.login-container input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+.login-container button {
+    padding: 12px;
+    border: none;
+    border-radius: 7px;
+    background: #2f80ed;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-container button:hover {
+    background: #1f6fd1;
+}
+
+.login-container p {
+    text-align: center;
+    margin-top: 18px;
+}

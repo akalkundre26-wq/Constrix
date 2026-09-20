@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Labor Attendance</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+</head>
+
+<body>
+
+<main class="main-content">
+
+    <h2>
+        Attendance - {{ labor["full_name"] }}
+    </h2>
+
+    <div class="attendance-summary">
+
+        <div class="summary-box">
+            <h3>Present</h3>
+            <p id="presentCount">0</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>Absent</h3>
+            <p id="absentCount">0</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>Half Day</h3>
+            <p id="halfCount">0</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>OT Hours</h3>
+            <p id="otCount">0</p>
+        </div>
+
+    </div>
+
+
+    <div class="calendar-box">
+
+        <h3>Attendance Calendar</h3>
+
+        <div class="calendar">
+
+            {% for record in attendance %}
+
+            <div class="calendar-day
+
+                {% if record['status'] == 'Present' and record['overtime_hours']|int > 0 %}
+                    ot
+
+                {% elif record['status'] == 'Present' %}
+                    present
+
+                {% elif record['status'] == 'Absent' %}
+                    absent
+
+                {% elif record['status'] == 'Half Day' %}
+                    half
+
+                {% elif record['status'] == 'Weekly Off' %}
+                    off
+                {% endif %}
+
+            ">
+
+                <strong>
+                    {{ record["attendance_date"] }}
+                </strong>
+
+                <span>
+                    {{ record["status"] }}
+                </span>
+
+                {% if record["overtime_hours"]|int > 0 %}
+                <small>
+                    OT: {{ record["overtime_hours"] }} hrs
+                </small>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <div class="legend">
+
+        <span>🟢 Present</span>
+        <span>🔵 Present + OT</span>
+        <span>🟡 Half Day</span>
+        <span>🔴 Absent</span>
+        <span>⚪ Weekly Off</span>
+
+    </div>
+
+</main>
+
+</body>
+</html>

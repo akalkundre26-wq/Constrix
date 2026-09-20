@@ -1,0 +1,317 @@
+<!-- =====================================================
+     ADMIN CUSTOMER DETAILS PAGE
+     Shows customer information, project,
+     questions and Admin reply
+===================================================== -->
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Customer Details - Constrix</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <style>
+
+        /* ==========================================
+           CUSTOMER DETAILS PAGE
+        ========================================== */
+
+        .customer-details-page {
+            padding: 30px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+        }
+
+        .details-box {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #ddd;
+            margin-bottom: 20px;
+        }
+
+        .message-box {
+            padding: 15px;
+            margin-top: 15px;
+            background: #f5f7fa;
+            border-radius: 8px;
+        }
+
+        .admin-reply {
+            margin-top: 10px;
+            padding: 10px;
+            background: #eaf7ed;
+            border-radius: 6px;
+        }
+
+        .reply-form {
+            margin-top: 12px;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .reply-btn {
+            background: #1677d2;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     CUSTOMER DETAILS
+===================================================== -->
+
+<div class="customer-details-page">
+
+
+    <a href="{{ url_for('customers') }}"
+       class="back-link">
+
+        ← Back to Customers
+
+    </a>
+
+
+    <h1>Customer Details</h1>
+
+
+    <div class="details-grid">
+
+
+        <!-- =============================================
+             LEFT SIDE
+        ============================================== -->
+
+        <div>
+
+
+            <!-- CUSTOMER PROFILE -->
+
+            <div class="details-box">
+
+                <h3>Customer Profile</h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ customer["full_name"] }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ customer["email"] }}
+                </p>
+
+                <p>
+                    <strong>Username:</strong>
+                    {{ customer["username"] }}
+                </p>
+
+                <p>
+                    <strong>Mobile:</strong>
+                    {{ customer["mobile"] }}
+                </p>
+
+            </div>
+
+
+
+            <!-- CUSTOMER PROJECT -->
+
+            <div class="details-box">
+
+                <h3>Assigned Project</h3>
+
+
+                {% if project %}
+
+                    <p>
+                        <strong>Project:</strong>
+                        {{ project["project_name"] }}
+                    </p>
+
+                    <p>
+                        <strong>Site:</strong>
+                        {{ project["site_address"] }}
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+                        {{ project["status"] }}
+                    </p>
+
+                    <p>
+                        <strong>Progress:</strong>
+                        {{ project["progress"] }}%
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        No project assigned.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =============================================
+             RIGHT SIDE - CUSTOMER MESSAGES
+        ============================================== -->
+
+        <div class="details-box">
+
+
+            <h3>Customer Messages</h3>
+
+
+            {% if queries %}
+
+
+                {% for query in queries %}
+
+
+                    <div class="message-box">
+
+
+                        <!-- CUSTOMER MESSAGE -->
+
+                        <p>
+
+                            <strong>
+                                {{ customer["full_name"] }}:
+                            </strong>
+
+                            {{ query["message"] }}
+
+                        </p>
+
+
+                        <small>
+                            {{ query["created_at"] }}
+                        </small>
+
+
+
+                        <!-- =================================
+                             IF ADMIN ALREADY REPLIED
+                        ================================== -->
+
+                        {% if query["admin_reply"] %}
+
+
+                            <div class="admin-reply">
+
+                                <strong>
+                                    Your Reply:
+                                </strong>
+
+                                {{ query["admin_reply"] }}
+
+                            </div>
+
+
+                        {% else %}
+
+
+                            <!-- =============================
+                                 ADMIN REPLY FORM
+                            ============================== -->
+
+                            <form
+                                method="POST"
+                                class="reply-form">
+
+
+                                <!-- Question ID -->
+
+                                <input
+                                    type="hidden"
+                                    name="query_id"
+                                    value="{{ query['id'] }}">
+
+
+                                <textarea
+                                    name="admin_reply"
+                                    rows="3"
+                                    placeholder="Type your reply..."
+                                    required></textarea>
+
+
+                                <button
+                                    type="submit"
+                                    class="reply-btn">
+
+                                    Send Reply
+
+                                </button>
+
+
+                            </form>
+
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <p>
+                    No messages from this customer.
+                </p>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

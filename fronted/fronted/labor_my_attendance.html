@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Attendance</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='admin.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='labor.css') }}">
+</head>
+
+<body>
+
+<main class="main-content">
+
+    <h2>My Attendance</h2>
+    <p>Welcome, <strong>{{ labor["full_name"] }}</strong></p>
+
+    <!-- SUMMARY -->
+    <div class="attendance-summary">
+
+        <div class="summary-box">
+            <h3>Present</h3>
+            <p>{{ present_count }}</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>Absent</h3>
+            <p>{{ absent_count }}</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>Half Day</h3>
+            <p>{{ half_count }}</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>Weekly Off</h3>
+            <p>{{ off_count }}</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>OT Hours</h3>
+            <p>{{ ot_count }}</p>
+        </div>
+
+    </div>
+
+    <!-- ATTENDANCE RECORDS -->
+    <div class="calendar-box">
+
+        <h3>Attendance Records</h3>
+
+        <table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+            <tr>
+                <th>Date</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>OT Hours</th>
+            </tr>
+
+            {% for record in attendance %}
+
+            <tr>
+                <td>{{ record["attendance_date"] }}</td>
+                <td>{{ record["project_name"] }}</td>
+                <td>{{ record["status"] }}</td>
+                <td>{{ record["overtime_hours"] }}</td>
+            </tr>
+
+            {% else %}
+
+            <tr>
+                <td colspan="4" style="text-align:center;">
+                    No attendance available.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+    <br>
+
+    <a href="{{ url_for('labor_dashboard') }}" class="back-btn">
+        Back to Dashboard
+    </a>
+
+</main>
+
+</body>
+</html>

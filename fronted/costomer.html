@@ -1,0 +1,341 @@
+<!-- =====================================================
+     ADMIN CUSTOMERS PAGE - CONSTRIX
+     Shows all registered customers
+     View button opens individual customer details
+===================================================== -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Customers - Constrix</title>
+
+    <link rel="stylesheet" href="/CSS/admin.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+    <div>
+
+        <h2>CONSTRIX</h2>
+
+        <p>Smart Construction Tracking</p>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <strong>
+            {{ session['full_name'] }}
+        </strong>
+
+        <span>
+            {{ session['company_name'] }}
+        </span>
+
+    </div>
+
+</header>
+
+
+
+<div class="dashboard">
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside>
+
+
+       
+
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+
+        <a href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+
+        <a class="active"
+           href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+
+       <!-- LABOR PAGE LINK -->
+<a href="{{ url_for('labor') }}">
+    Labor
+</a>
+
+
+        <a href="#">
+            Subcontractor
+        </a>
+
+<!-- =====================================================
+     MATERIAL & EXPENSES LINK
+     project = Blueprint name
+     material_expenses = Python function/route name
+====================================================== -->
+<a href="{{ url_for('project.material_expenses') }}">
+    Material & Expenses
+</a>
+
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+
+        <a href="#">
+            Profile
+        </a>
+
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main>
+
+
+        <!-- CUSTOMER PAGE HEADING -->
+
+        <div class="customer-heading">
+
+
+            <div>
+
+                <h1>Customers</h1>
+
+                <p>
+                    Customers registered with your
+                    contractor code.
+                </p>
+
+            </div>
+
+
+            <div class="customer-count">
+
+                Total Customers:
+
+                <strong>
+                    {{ customers|length }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CUSTOMER TABLE
+        ================================================== -->
+
+        <div class="customer-table-box">
+
+
+            <table class="customer-table">
+
+
+                <!-- TABLE HEADINGS -->
+
+                <thead>
+
+                    <tr>
+
+                        <th>Customer</th>
+
+                        <th>Email</th>
+
+                        <th>Username</th>
+
+                        <th>Mobile</th>
+
+                        <th>Status</th>
+
+
+                        <!-- =================================
+                             VIEW CUSTOMER BUTTON COLUMN
+                        ================================== -->
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for customer in customers %}
+
+
+                    <tr>
+
+
+                        <!-- CUSTOMER NAME -->
+
+                        <td>
+
+                            <div class="customer-name">
+
+
+                                <div class="customer-avatar">
+
+                                    {{ customer['full_name'][0] }}
+
+                                </div>
+
+
+                                <strong>
+
+                                    {{ customer['full_name'] }}
+
+                                </strong>
+
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- EMAIL -->
+
+                        <td>
+
+                            {{ customer['email'] or '-' }}
+
+                        </td>
+
+
+
+                        <!-- USERNAME -->
+
+                        <td>
+
+                            {{ customer['username'] }}
+
+                        </td>
+
+
+
+                        <!-- MOBILE -->
+
+                        <td>
+
+                            {{ customer['mobile'] or '-' }}
+
+                        </td>
+
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span class="customer-active">
+
+                                Registered
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- =================================
+                             VIEW CUSTOMER BUTTON
+                             Opens Customer Details +
+                             Project + Messages page
+                        ================================== -->
+
+                        <td>
+
+                            <a
+                                href="{{ url_for(
+                                    'admin_customer_details',
+                                    customer_id=customer['id']
+                                ) }}"
+                                class="view-customer-btn">
+
+                                View
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% else %}
+
+
+                    <!-- NO CUSTOMER -->
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="no-customers">
+
+                            No customers registered yet.
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

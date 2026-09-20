@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Registration - Constrix</title>
+    <link rel="stylesheet" href="../CSS/login.css">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h1>CONSTRIX</h1>
+        <h2>Admin Registration</h2>
+
+       <form method="POST" action="{{ url_for('admin_register') }}">
+
+    <label>Full Name</label>
+    <input type="text" name="full_name" required>
+
+    <label>Company Name</label>
+    <input type="text" name="company_name" required>
+
+    <label>Email</label>
+    <input type="email" name="email" required>
+
+    <label>Username</label>
+    <input type="text" name="username" required>
+
+    <label>Password</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Register</button>
+
+</form>
+
+        <p class="register-text">
+            Already have an account?
+            <a href="admin.html">Login</a>
+        </p>
+
+    </div>
+
+</body>
+
+</html>

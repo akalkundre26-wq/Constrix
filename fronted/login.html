@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login - Constrix</title>
+    <link rel="stylesheet" href="../CSS/login.css">
+</head>
+
+<body>
+
+    <div class="login-page">
+
+        <div class="brand">
+            <h1>CONSTRIX</h1>
+            <h2>Login to Continue</h2>
+            <p>Select your role to access Constrix</p>
+        </div>
+
+        <div class="role-container">
+
+            <a href="{{ url_for('admin_login') }}" class="role-card">
+                <div class="icon">👨‍💼</div>
+                <h2>Admin</h2>
+                <p>Contractor Access</p>
+                <span>Admin Login</span>
+            </a>
+
+            <a href="{{ url_for('labor_login') }}" class="role-card">
+                <div class="icon">👷</div>
+                <h2>Labor</h2>
+                <p>Worker Access</p>
+                <span>Labor Login</span>
+            </a>
+
+            <a href="{{ url_for('customer_login') }}" class="role-card">
+                <div class="icon">🏠</div>
+                <h2>Customer</h2>
+                <p>Project Access</p>
+                <span>Customer Login</span>
+            </a>
+
+        </div>
+
+        <a href="{{ url_for('home') }}" class="back-link">← Back to Home</a>
+
+    </div>
+
+</body>
+
+</html>

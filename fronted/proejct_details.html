@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ project['project_name'] }} - Constrix</title>
+    <link rel="stylesheet" href="/CSS/project_detailed.css">
+
+    <!-- DAILY UPDATE PHOTO STYLE -->
+    <style>
+
+        .update-card {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .update-card h3 {
+            margin-top: 0;
+        }
+
+        .update-photos {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* Small photo inside card */
+        .update-photo {
+            width: 100px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Large photo popup */
+        .photo-box {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .photo-box img {
+            max-width: 90%;
+            max-height: 85%;
+            object-fit: contain;
+        }
+
+        .photo-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Smart Construction Tracking</p>
+    </div>
+
+    <div class="header-user">
+        <strong>{{ session['full_name'] }}</strong>
+        <span>{{ session['company_name'] }}</span>
+    </div>
+
+</header>
+
+
+<div class="dashboard">
+
+<aside>
+
+    <!-- =====================================================
+         ADMIN SIDEBAR
+    ====================================================== -->
+    {% if session.get("role") == "admin" %}
+
+        <div class="contractor-code">
+            <small>Contractor Code</small>
+            <strong>{{ session['contractor_code'] }}</strong>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a class="active"
+           href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+        <a href="{{ url_for('labor') }}">
+            Labor
+        </a>
+
+        <a href="{{ url_for('project.material_expenses') }}">
+            Material & Expenses
+        </a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a href="#">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+
+    <!-- =====================================================
+         LABOR / SUBCONTRACTOR SIDEBAR
+    ====================================================== -->
+    {% elif session.get("role") == "labor" %}
+
+    <!-- DASHBOARD -->
+    <a href="{{ url_for('labor_dashboard') }}">
+        Dashboard
+    </a>
+
+    <!-- PROJECT -->
+    <a class="active"
+       href="{{ url_for('project.projects') }}">
+        Project
+    </a>
+
+    <!-- ATTENDANCE -->
+    <a href="{{ url_for('labor_my_attendance') }}">
+        Attendance
+    </a>
+
+    <!-- SALARY -->
+    <a href="{{ url_for('labor_my_salary') }}">
+        Salary
+    </a>
+
+    <!-- MATERIAL & EXPENSES -->
+    <a href="{{ url_for('project.material_expenses') }}">
+        Material & Expenses
+    </a>
+
+    <!-- LOGOUT -->
+    <a href="{{ url_for('logout') }}">
+        Logout
+    </a>
+
+{% endif %}
+
+</aside>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+
+        <div class="page-heading">
+
+            <div>
+
+                <h1>
+                    {{ project['project_name'] }}
+                </h1>
+
+                <p>
+                    Complete project information and progress.
+                </p>
+
+            </div>
+
+
+            <a href="{{ url_for('project.projects') }}"
+               class="back-btn">
+
+                ← Back to Projects
+
+            </a>
+
+        </div>
+
+
+
+        <!-- TOP SECTION -->
+
+        <div class="top-section">
+
+
+            <!-- PROJECT IMAGE -->
+
+            <div class="project-photo">
+
+                {% if project['image'] %}
+
+                    <img
+                        src="{{ url_for(
+                            'project.project_image',
+                            filename=project['image']
+                        ) }}"
+                        alt="Project Photo">
+
+                {% else %}
+
+                    <div class="no-photo">
+                        No Project Photo
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- PROJECT INFO -->
+
+            <div class="project-summary">
+
+
+                <div class="summary-heading">
+
+                    <h2>Project Overview</h2>
+
+                    <span class="status">
+                        {{ project['status'] }}
+                    </span>
+
+                </div>
+
+
+                <div class="info-grid">
+
+                    <div>
+                        <small>Customer</small>
+                        <strong>
+                            {{ project['customer_name'] }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Project Type</small>
+                        <strong>
+                            {{ project['project_type'] or '-' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Start Date</small>
+                        <strong>
+                            {{ project['start_date'] or '-' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Expected End</small>
+                        <strong>
+                            {{ project['end_date'] or '-' }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Budget</small>
+                        <strong>
+                            ₹ {{ project['budget'] or 0 }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <small>Project ID</small>
+                        <strong>
+                            #{{ project['id'] }}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="location">
+
+                    <small>Site Address</small>
+
+                    <p>
+                        {{ project['site_address'] or 'Not added' }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+      <!-- PROJECT PROGRESS -->
+
+<div class="section-card">
+
+    <div class="section-title">
+
+        <h2>Project Progress</h2>
+
+        <strong class="percentage">
+            {{ ai_progress }}%
+        </strong>
+
+    </div>
+
+    <div class="progress-bar">
+
+        <div class="progress-fill"
+             style="width: {{ ai_progress }}%;">
+        </div>
+
+    </div>
+
+    <p class="progress-text">
+        Overall construction progress
+    </p>
+
+</div>
+
+
+<!-- =====================================================
+     AI WORK PLAN
+     Click status: Pending -> In Progress -> Completed
+====================================================== -->
+
+<div class="section-card ai-work-plan">
+
+    <h2>AI Work Plan</h2>
+
+    <p class="ai-plan-note">
+        Project work breakdown and status. Click status to update it.
+    </p>
+
+    {% if work_plans %}
+
+        {% for work_name, tasks in work_plans.items() %}
+
+            <div class="work-plan-block">
+
+                <h3>{{ work_name }} - {{ tasks|length }} tasks</h3>
+
+                <table class="work-plan-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Task</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for task in tasks %}
+
+                        <tr>
+
+                            <td>{{ loop.index }}</td>
+
+                            <td>{{ task['task_name'] }}</td>
+
+                            <td>
+
+                                <form method="POST"
+                                      action="{{ url_for(
+                                          'project.update_work_task_status',
+                                          project_id=project['id'],
+                                          task_id=task['id']
+                                      ) }}">
+
+                                    {% if task['status'] == 'Completed' %}
+
+                                        <button type="submit"
+                                                class="task-status completed">
+                                            ✓ Completed
+                                        </button>
+
+                                    {% elif task['status'] == 'In Progress' %}
+
+                                        <button type="submit"
+                                                class="task-status in-progress">
+                                            ▶ In Progress
+                                        </button>
+
+                                    {% else %}
+
+                                        <button type="submit"
+                                                class="task-status pending">
+                                            ● Pending
+                                        </button>
+
+                                    {% endif %}
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No AI work plan added yet.</p>
+
+    {% endif %}
+
+</div>
+        <!-- DESCRIPTION -->
+
+        <div class="section-card">
+
+            <h2>Project Description</h2>
+
+            <p class="description">
+
+                {{ project['description'] or
+                   'No project description added.' }}
+
+            </p>
+
+        </div>
+
+
+
+        <!-- LOWER CARDS -->
+
+        <div class="lower-grid">
+
+
+            <!-- ==========================================
+                 DAILY UPDATES
+            =========================================== -->
+
+            <div class="mini-card">
+
+                <h2>Daily Updates</h2>
+
+                <p>
+                    Track daily construction work,
+                    photos and site updates.
+                </p>
+
+
+                <!-- ADD UPDATE BUTTON -->
+
+                <a href="{{ url_for(
+                        'project.add_project_update',
+                        project_id=project['id']
+                    ) }}">
+
+                    <button type="button">
+                        + Add Update
+                    </button>
+
+                </a>
+
+
+
+                <!-- =====================================
+                     SAVED DAILY UPDATES
+                ====================================== -->
+
+                {% if updates %}
+
+                    {% for item in updates %}
+
+                        <div class="update-card">
+
+
+                            <!-- DATE -->
+
+                            <h3>
+                                {{ item["update"]["update_date"] }}
+                            </h3>
+                            <!-- EDIT DAILY UPDATE -->
+
+<a href="{{ url_for(
+    'project.edit_project_update',
+    update_id=item['update']['id']
+) }}">
+
+    <button type="button">
+        Update
+    </button>
+
+</a>
+
+
+                            <!-- WORK DONE -->
+
+                            <p>
+                                {{ item["update"]["work_details"] }}
+                            </p>
+
+
+                            <!-- SMALL PHOTOS -->
+
+                            {% if item["photos"] %}
+
+                                <div class="update-photos">
+
+                                    {% for photo in item["photos"] %}
+
+                                        <img
+                                            src="{{ url_for(
+                                                'project.project_image',
+                                                filename=photo['image']
+                                            ) }}"
+                                            class="update-photo"
+                                            alt="Site Photo"
+                                            onclick="showPhoto(this.src)"
+                                        >
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    {% endfor %}
+
+
+                {% else %}
+
+                    <p>
+                        No daily updates added yet.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+
+          <!-- =====================================================
+     MATERIALS & EXPENSES - READ ONLY
+     File: fronted/proejct_details.html
+     Shows saved data directly inside Project Details
+====================================================== -->
+
+<div class="mini-card">
+
+    <h2>Materials</h2>
+
+    {% if materials %}
+
+    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+
+        <tr style="background:#f5f5f5;">
+            <th style="padding:10px; text-align:left;">Material</th>
+            <th style="padding:10px; text-align:left;">Available Stock</th>
+        </tr>
+
+        {% for material in materials %}
+
+        <tr style="border-bottom:1px solid #ddd;">
+
+            <td style="padding:10px;">
+                {{ material['material_name'] }}
+            </td>
+
+            <td style="padding:10px;">
+                {{ material['quantity'] }}
+                {{ material['unit'] }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+        <p>No materials added yet.</p>
+
+    {% endif %}
+
+</div>
+
+
+<div class="mini-card">
+
+    <h2>Expenses</h2>
+
+    {% if expenses %}
+
+    <table style="width:100%; border-collapse:collapse; margin-top:15px;">
+
+        <tr style="background:#f5f5f5;">
+            <th style="padding:10px; text-align:left;">Date</th>
+            <th style="padding:10px; text-align:left;">Expense</th>
+            <th style="padding:10px; text-align:left;">Amount</th>
+        </tr>
+
+        {% for expense in expenses %}
+
+        <tr style="border-bottom:1px solid #ddd;">
+
+            <td style="padding:10px;">
+                {{ expense['expense_date'] }}
+            </td>
+
+            <td style="padding:10px;">
+                {{ expense['expense_name'] }}
+            </td>
+
+            <td style="padding:10px;">
+                ₹ {{ expense['amount'] }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% else %}
+
+        <p>No expenses added yet.</p>
+
+    {% endif %}
+
+
+    <div style="
+        margin-top:15px;
+        padding-top:12px;
+        border-top:1px solid #ddd;
+        text-align:right;
+        font-size:18px;
+    ">
+
+        <strong>
+            Total Expense: ₹ {{ total_expense }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     LARGE PHOTO VIEW
+=========================================== -->
+
+<div id="photoBox"
+     class="photo-box"
+     onclick="closePhoto()">
+
+    <span class="photo-close">
+        &times;
+    </span>
+
+    <img id="bigPhoto"
+         alt="Large Site Photo">
+
+</div>
+
+
+
+<script>
+
+    // Open photo in large size
+
+    function showPhoto(src) {
+
+        document.getElementById(
+            "bigPhoto"
+        ).src = src;
+
+        document.getElementById(
+            "photoBox"
+        ).style.display = "flex";
+
+    }
+
+
+    // Close large photo
+
+    function closePhoto() {
+
+        document.getElementById(
+            "photoBox"
+        ).style.display = "none";
+
+    }
+
+</script>
+
+
+</body>
+</html>
