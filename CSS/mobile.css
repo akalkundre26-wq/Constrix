@@ -2,7 +2,7 @@
    Add AFTER the normal page CSS files.
 */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   html, body { width:100%; max-width:100%; overflow-x:hidden; }
   img { max-width:100%; }
 
