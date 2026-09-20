@@ -2,7 +2,7 @@
    Add AFTER the normal page CSS files.
 */
 
-@media (max-width: 768px) {
+@media (max-width: 768px) and (pointer: coarse) {
   html, body { width:100%; max-width:100%; overflow-x:hidden; }
   img { max-width:100%; }
 
@@ -155,7 +155,7 @@
   .section-heading { gap:10px; flex-wrap:wrap; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px) and (pointer: coarse) {
   .navbar { justify-content:center; }
   .navbar .logo, .navbar .brand { max-width:125px; }
   .navbar .logo img, .navbar .brand-logo { width:125px; height:46px; }
