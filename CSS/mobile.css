@@ -1,0 +1,182 @@
+/* CONSTRIX - MOBILE RESPONSIVE CSS
+   Add AFTER the normal page CSS files.
+*/
+
+@media (max-width: 600px) {
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  img { max-width:100%; }
+
+  /* HOME */
+  .navbar { height:auto; min-height:70px; padding:8px 14px; gap:8px; flex-wrap:wrap; }
+  .navbar .logo, .navbar .brand { max-width:145px; }
+  .navbar .logo img, .navbar .brand-logo { width:140px; height:52px; transform:none; object-fit:contain; }
+  .navbar nav { gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+  .navbar nav a { font-size:13px; }
+  .navbar nav .nav-btn, .nav-btn { padding:8px 10px; }
+  .hero { min-height:500px; padding:45px 22px; background-position:center; }
+  .hero-content { max-width:100%; }
+  .small-title { font-size:11px; letter-spacing:1.5px; }
+  .hero h1 { font-size:36px; line-height:1.15; margin-bottom:16px; }
+  .hero-text { font-size:15px; line-height:1.6; margin-bottom:24px; }
+  .main-btn { padding:12px 18px; font-size:14px; }
+  .features { flex-direction:column; align-items:center; padding:35px 20px; }
+  .feature-card { width:100%; max-width:320px; }
+  .about { padding:55px 22px; }
+  .about-content h2, .about h2 { font-size:30px; }
+  .about-content p, .about p { font-size:15px; line-height:1.7; }
+  footer { padding:18px 15px; font-size:13px; }
+
+  /* LOGIN */
+  .login-page { padding:30px 15px; }
+  .brand h1 { font-size:27px; }
+  .brand h2 { font-size:24px; }
+  .role-container { flex-direction:column; align-items:center; gap:18px; }
+  .role-card { width:100%; max-width:330px; padding:25px 18px; }
+  .form-container, .login-container, .login-box {
+    width:calc(100% - 30px); max-width:420px; margin:30px auto; padding:24px 20px;
+  }
+
+  /* ADMIN / LABOR COMMON */
+  header { height:auto; min-height:70px; padding:12px 15px; gap:10px; flex-wrap:wrap; }
+  header h2 { font-size:21px; }
+  header p { font-size:12px; }
+  .header-user, .user-box { font-size:13px; text-align:right; }
+  .dashboard { display:block; min-height:auto; }
+  .dashboard aside, aside {
+    width:100%; padding:0; display:flex; overflow-x:auto; white-space:nowrap;
+    -webkit-overflow-scrolling:touch;
+  }
+  aside .contractor-code { display:none; }
+  aside a { flex:0 0 auto; padding:13px 15px; font-size:13px; }
+  main { width:100%; padding:18px 14px; min-width:0; }
+
+  /* ADMIN DASHBOARD */
+  .welcome, .welcome-box { padding:18px; }
+  .welcome h1, .welcome-box h1 { font-size:24px; }
+  .cards { display:grid; grid-template-columns:1fr; gap:14px; }
+  .card { width:100%; padding:18px; }
+  .dashboard-content { grid-template-columns:1fr; gap:15px; }
+  .recent-projects, .recent-activity { padding:17px; }
+  .project-item { align-items:flex-start; gap:12px; flex-direction:column; }
+  .project-status { text-align:left; }
+
+  /* LISTS + TABLES */
+  .customer-heading, .page-header { flex-direction:column; align-items:flex-start; gap:12px; }
+  .customer-table-box, .labor-table { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .customer-table, .labor-table table, table { min-width:650px; }
+  .action-buttons { min-width:220px; }
+
+  /* PROJECTS */
+  .page-heading { flex-direction:column; align-items:flex-start; gap:12px; }
+  .page-heading h1 { font-size:26px; }
+  .project-grid { grid-template-columns:1fr; gap:16px; }
+  .add-project-card { min-height:230px; }
+  .project-card { width:100%; }
+  .project-actions { flex-wrap:wrap; }
+  .project-actions a, .project-actions form { min-width:30%; flex:1; }
+
+  /* ADD / EDIT PROJECT */
+  .project-form { grid-template-columns:1fr; gap:16px; }
+  .form-section { padding:18px; }
+  .form-row { grid-template-columns:1fr; gap:0; }
+  .image-upload-box { padding:20px 12px; }
+
+  /* PROJECT DETAILS */
+  .top-section { grid-template-columns:1fr; gap:16px; }
+  .project-photo { height:240px; }
+  .project-summary, .section-card { padding:18px; }
+  .summary-heading { align-items:flex-start; gap:10px; flex-wrap:wrap; }
+  .info-grid { grid-template-columns:1fr; gap:16px; }
+  .lower-grid { grid-template-columns:1fr; }
+  .work-plan-block { overflow-x:auto; }
+  .work-plan-table { min-width:600px; }
+
+  /* CUSTOMER */
+  .customer-header { padding:13px 15px; flex-direction:column; align-items:flex-start; gap:10px; }
+  .customer-header div:last-child { display:flex; flex-wrap:wrap; gap:10px; }
+  .customer-header a { margin-left:0; font-size:14px; }
+  .customer-main { padding:18px 14px; }
+  .customer-dashboard-grid { grid-template-columns:1fr; gap:16px; }
+  .customer-box { padding:18px; }
+  .project-buttons { flex-direction:column; }
+  .customer-btn { text-align:center; width:100%; }
+  .customer-list { gap:15px; }
+  .customer-card { width:100%; }
+
+  /* CUSTOMER PROJECT */
+  .customer-project-heading { flex-direction:column; align-items:flex-start; gap:10px; }
+  .customer-project-top { grid-template-columns:1fr; gap:15px; }
+  .customer-main-photo { height:240px; }
+  .customer-project-overview { height:auto; min-height:230px; }
+  .customer-project-layout { grid-template-columns:1fr; }
+  .customer-update-card { flex-direction:column; align-items:flex-start; gap:12px; }
+  .customer-update-info { min-width:0; width:100%; }
+  .customer-update-photos { width:100%; margin-left:0; justify-content:flex-start; }
+  .customer-update-photo { width:90px; height:65px; }
+  .work-plan-item { margin-left:22px; }
+
+  /* LABOR */
+  .work-card { padding:17px; }
+  .work-top { flex-direction:column; align-items:flex-start; gap:10px; }
+  .work-status { align-self:flex-start; }
+
+  /* ASSIGN WORK */
+  .assign-box { width:calc(100% - 28px); max-width:500px; margin:30px auto; padding:20px; }
+
+  /* AI PLANNER */
+  body > main { padding-left:14px; padding-right:14px; }
+  main > form, .result-box { width:100%; max-width:100%; padding:18px; }
+
+  /* ATTENDANCE */
+  .attendance-top { flex-direction:column; gap:12px; }
+  .attendance-top div, .attendance-top input, .attendance-top select { width:100%; }
+  .attendance-summary, .salary-summary {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+  }
+  .summary-box, .salary-summary div { min-width:0; padding:12px 8px; }
+  .summary-box p, .salary-summary p { font-size:19px; }
+  .calendar-box { padding:12px; overflow-x:auto; }
+  .calendar, .calendar-weekdays, .monthly-calendar { min-width:650px; }
+  .calendar-day { padding:8px 4px; min-height:65px; font-size:12px; }
+  .calendar-day strong { font-size:17px; }
+  .legend { gap:10px; font-size:12px; }
+  .attendance-month-box { padding:14px; }
+  .attendance-month-box input { margin:8px 0; width:100%; }
+  .attendance-month-box button { margin:5px 0 0; width:100%; }
+
+  /* SALARY */
+  .salary-rate-box, .salary-calculation { padding:16px; }
+  .salary-rate-box input { width:100%; margin:8px 0; }
+  .salary-rate-box button { width:100%; margin-top:5px; }
+
+  /* SAFETY */
+  input, select, textarea, button { max-width:100%; }
+  textarea { resize:vertical; }
+  .section-heading { gap:10px; flex-wrap:wrap; }
+}
+
+@media (max-width: 480px) {
+  .navbar { justify-content:center; }
+  .navbar .logo, .navbar .brand { max-width:125px; }
+  .navbar .logo img, .navbar .brand-logo { width:125px; height:46px; }
+  .navbar nav { width:100%; justify-content:center; gap:12px; padding-bottom:6px; }
+  .navbar nav a { font-size:12px; }
+  .navbar nav .nav-btn { padding:7px 9px; }
+  .hero { min-height:450px; padding:35px 18px; }
+  .hero h1 { font-size:31px; }
+  .hero-text { font-size:14px; }
+  .about-content h2, .about h2 { font-size:27px; }
+  header { align-items:flex-start; }
+  header h2 { font-size:19px; }
+  .header-user, .user-box { max-width:48%; font-size:12px; }
+  main { padding:15px 10px; }
+  .cards, .attendance-summary, .salary-summary { grid-template-columns:1fr; }
+  .page-heading h1 { font-size:23px; }
+  .project-photo, .customer-main-photo { height:210px; }
+  .project-actions { flex-direction:column; }
+  .project-actions a, .project-actions form, .project-actions button { width:100%; }
+  .customer-update-photo { width:75px; height:58px; }
+  .form-container, .login-container, .login-box, .assign-box {
+    width:calc(100% - 20px); padding:20px 16px;
+  }
+}
