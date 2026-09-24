@@ -286,20 +286,44 @@
                              Project + Messages page
                         ================================== -->
 
-                        <td>
+                      <td>
 
-                            <a
-                                href="{{ url_for(
-                                    'admin_customer_details',
-                                    customer_id=customer['id']
-                                ) }}"
-                                class="view-customer-btn">
+    <a
+        href="{{ url_for(
+            'admin_customer_details',
+            customer_id=customer['id']
+        ) }}"
+        class="view-customer-btn">
 
-                                View
+        View
 
-                            </a>
+    </a>
 
-                        </td>
+    <form
+        method="POST"
+        action="{{ url_for('delete_customer', customer_id=customer['id']) }}"
+        style="display:inline;"
+        onsubmit="return confirm('Are you sure you want to delete this customer?');">
+
+        <button
+            type="submit"
+            style="
+                border:none;
+                background:none;
+                color:red;
+                cursor:pointer;
+                text-decoration:underline;
+                font-size:16px;
+                margin-left:10px;
+            ">
+
+            Delete
+
+        </button>
+
+    </form>
+
+</td>
 
 
                     </tr>

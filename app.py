@@ -638,6 +638,37 @@ def customers():
     )
 
 # =====================================================
+# DELETE CUSTOMER
+# =====================================================
+
+@app.route("/admin/customer/delete/<int:customer_id>", methods=["POST"])
+def delete_customer(customer_id):
+
+    if "user_id" not in session:
+        return redirect(url_for("admin_login"))
+
+    contractor_id = session["contractor_id"]
+
+    conn = get_db_connection()
+
+    conn.execute(
+        """
+        DELETE FROM users
+        WHERE id = ?
+        AND contractor_id = ?
+        AND role = 'customer'
+        """,
+        (customer_id, contractor_id)
+    )
+
+    conn.commit()
+    conn.close()
+
+    flash("Customer deleted successfully.")
+
+    return redirect(url_for("customers"))
+
+# =====================================================
 # ADMIN - CUSTOMER DETAILS & MESSAGE REPLY
 # Shows customer profile, project, questions
 # and allows Admin to send reply
