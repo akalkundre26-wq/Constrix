@@ -96,34 +96,6 @@
                     {{ customer["mobile"] }}
                 </p>
 
-                <p>
-    <strong>Mobile:</strong>
-    {{ customer["mobile"] }}
-</p>
-
-<form 
-    method="POST" 
-    action="{{ url_for('delete_customer', customer_id=customer['id']) }}" 
-    onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.');" 
-    style="margin-top:25px;">
-
-    <button 
-        type="submit" 
-        style="
-            background:#fff;
-            color:#dc3545;
-            border:1px solid #dc3545;
-            padding:8px 14px;
-            border-radius:5px;
-            cursor:pointer;
-            font-size:14px;
-        ">
-
-        Delete Customer
-
-    </button>
-
-</form>
 
 </div>
 
