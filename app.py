@@ -2252,20 +2252,9 @@ def admin_attendance():
         return redirect(url_for("admin_login"))
 
     contractor_id = session["contractor_id"]
-
     conn = get_db_connection()
 
-    labors = conn.execute(
-        """
-        SELECT *
-        FROM users
-        WHERE contractor_id = ?
-        AND role = 'labor'
-        ORDER BY full_name
-        """,
-        (contractor_id,)
-    ).fetchall()
-
+    # Contractor ke projects
     projects = conn.execute(
         """
         SELECT *
@@ -2276,6 +2265,44 @@ def admin_attendance():
         (contractor_id,)
     ).fetchall()
 
+    # Selected project
+    selected_project_id = request.args.get("project_id")
+
+    if request.method == "POST":
+        selected_project_id = request.form["project_id"]
+
+    # Starting me labor empty rahega
+    labors = []
+
+    # Project select hone ke baad sirf us project ke labor
+    if selected_project_id:
+
+        labors = conn.execute(
+            """
+            SELECT DISTINCT users.*
+            FROM users
+
+            JOIN labor_projects
+            ON users.id = labor_projects.labor_id
+
+            JOIN projects
+            ON labor_projects.project_id = projects.id
+
+            WHERE labor_projects.project_id = ?
+            AND users.contractor_id = ?
+            AND projects.contractor_id = ?
+            AND users.role = 'labor'
+
+            ORDER BY users.full_name
+            """,
+            (
+                selected_project_id,
+                contractor_id,
+                contractor_id
+            )
+        ).fetchall()
+
+    # Save attendance
     if request.method == "POST":
 
         attendance_date = request.form["attendance_date"]
@@ -2294,7 +2321,6 @@ def admin_attendance():
                 0
             )
 
-            # Check same attendance already exists
             existing = conn.execute(
                 """
                 SELECT id
@@ -2310,7 +2336,6 @@ def admin_attendance():
                 )
             ).fetchone()
 
-            # If already exists -> update
             if existing:
 
                 conn.execute(
@@ -2327,7 +2352,6 @@ def admin_attendance():
                     )
                 )
 
-            # Otherwise -> insert
             else:
 
                 conn.execute(
@@ -2357,7 +2381,10 @@ def admin_attendance():
         flash("Attendance saved successfully.")
 
         return redirect(
-            url_for("admin_attendance")
+            url_for(
+                "admin_attendance",
+                project_id=project_id
+            )
         )
 
     conn.close()
@@ -2365,7 +2392,8 @@ def admin_attendance():
     return render_template(
         "admin_attendance.html",
         labors=labors,
-        projects=projects
+        projects=projects,
+        selected_project_id=selected_project_id
     )
 
 # =============================================
