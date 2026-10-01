@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login Activity - Constrix</title>
+
+    <link rel="stylesheet" href="/CSS/admin.css">
+
+    <!-- MOBILE CSS - ALWAYS LAST -->
+    <link rel="stylesheet" href="/CSS/mobile.css">
+
+    <style>
+
+        .activity-table-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 25px;
+            overflow-x: auto;
+        }
+
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .activity-table th,
+        .activity-table td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .activity-table th {
+            background: #f5f5f5;
+        }
+
+        .active-status {
+            font-weight: bold;
+        }
+
+        .inactive-status {
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div>
+        <h2>CONSTRIX</h2>
+        <p>Smart Construction Tracking</p>
+    </div>
+
+    <div class="header-user">
+
+        <strong>
+            {{ session['full_name'] }}
+        </strong>
+
+        <span>
+            {{ session['company_name'] }}
+        </span>
+
+    </div>
+
+</header>
+
+
+
+<div class="dashboard">
+
+
+    <aside>
+
+        <a href="{{ url_for('admin_dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('project.projects') }}">
+            Projects
+        </a>
+
+        <a href="{{ url_for('customers') }}">
+            Customers
+        </a>
+
+        <a href="{{ url_for('labor') }}">
+            Labor
+        </a>
+
+        <a href="{{ url_for('project.material_expenses') }}">
+            Material & Expenses
+        </a>
+
+        <a href="{{ url_for('ai_planner') }}">
+            AI Work Planner
+        </a>
+
+        <a class="active"
+           href="{{ url_for('admin_login_activity') }}">
+            Login Activity
+        </a>
+
+        <a href="#">
+            Profile
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <main>
+
+
+        <div class="welcome">
+
+            <h1>
+                Login Activity
+            </h1>
+
+            <p>
+                View Customer and Labor login status.
+            </p>
+
+            <div class="contractor-code">
+
+                Contractor Code:
+
+                <strong>
+                    {{ session['contractor_code'] }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="activity-table-box">
+
+            <table class="activity-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Login Status</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for user in users %}
+
+                    <tr>
+
+                        <!-- NAME -->
+                        <td>
+                            {{ user['full_name'] }}
+                        </td>
+
+
+                        <!-- ROLE -->
+                        <td>
+                            {{ user['role']|capitalize }}
+                        </td>
+
+
+                        <!-- LOGIN STATUS -->
+                        <td>
+
+                            {% if user['is_active'] == 1 %}
+
+                                <span class="active-status">
+                                    🟢 Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="inactive-status">
+                                    🔴 Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+
+                {% else %}
+
+                    <tr>
+
+                        <td colspan="3">
+                            No Customer or Labor found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

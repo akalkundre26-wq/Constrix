@@ -6,7 +6,7 @@
     <title>Admin Login - Constrix</title>
     <link rel="stylesheet" href="/CSS/login.css">
 
-      <!-- MOBILE CSS - ALWAYS LAST -->
+    <!-- MOBILE CSS - ALWAYS LAST -->
     <link rel="stylesheet" href="/CSS/mobile.css">
 </head>
 
@@ -18,25 +18,40 @@
         <h2>Admin Login</h2>
         <p>Login to access your dashboard</p>
 
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="login-error">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <form method="POST" action="{{ url_for('admin_login') }}">
 
             <label>Email</label>
             <input
                 type="email"
                 name="email"
-                required
                 placeholder="Enter your email"
+                maxlength="100"
+                required
             >
 
             <label>Password</label>
             <input
                 type="password"
                 name="password"
-                required
                 placeholder="Enter your password"
+                required
             >
 
             <button type="submit">Login</button>
+
+            <p class="forgot-password">
+                <a href="{{ url_for('admin_forgot_password') }}">
+                    Forgot Password?
+                </a>
+            </p>
 
         </form>
 

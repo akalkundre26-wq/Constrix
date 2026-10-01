@@ -4,9 +4,10 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Registration - Constrix</title>
+
     <link rel="stylesheet" href="../CSS/login.css">
 
-      <!-- MOBILE CSS - ALWAYS LAST -->
+    <!-- MOBILE CSS - ALWAYS LAST -->
     <link rel="stylesheet" href="/CSS/mobile.css">
 </head>
 
@@ -17,30 +18,46 @@
         <h1>CONSTRIX</h1>
         <h2>Admin Registration</h2>
 
-       <form method="POST" action="{{ url_for('admin_register') }}">
+        <form method="POST" action="{{ url_for('admin_register') }}">
 
-    <label>Full Name</label>
-    <input type="text" name="full_name" required>
+            <label>Full Name</label>
+            <input type="text" name="full_name" required>
 
-    <label>Company Name</label>
-    <input type="text" name="company_name" required>
+            <label>Company Name</label>
+            <input type="text" name="company_name" required>
 
-    <label>Email</label>
-    <input type="email" name="email" required>
+            <label>Email</label>
+            <input type="email" name="email" required>
 
-    <label>Username</label>
-    <input type="text" name="username" required>
+            <label>Username</label>
+            <input type="text" name="username" required>
 
-    <label>Password</label>
-    <input type="password" name="password" required>
+            <label>Password</label>
+            <input type="password" name="password" required>
 
-    <button type="submit">Register</button>
+            <label>Security Question</label>
+            <input
+                type="text"
+                name="security_question"
+                value="What is your childhood name?"
+                readonly
+            >
 
-</form>
+            <label>Security Answer</label>
+            <input
+                type="text"
+                name="security_answer"
+                placeholder="Enter your childhood name"
+                required
+            >
+
+            <button type="submit">Register</button>
+
+        </form>
 
         <p class="register-text">
             Already have an account?
-           <a href="{{ url_for('admin_login') }}">Login</a>
+            <a href="{{ url_for('admin_login') }}">Login</a>
         </p>
 
     </div>

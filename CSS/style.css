@@ -383,3 +383,17 @@ footer p {
     object-fit: contain;
     display: block;
 }
+
+.register-text {
+    text-align: center;
+}
+
+.register-text a {
+    color: #2878e8;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-text a:hover {
+    text-decoration: underline;
+}

@@ -5,6 +5,7 @@ import requests
 import json
 import random
 import string
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from project_backend import project_bp, setup_project_database
@@ -17,6 +18,7 @@ app = Flask(
 )
 
 app.secret_key = "constrix-secret-key"
+
 
 app.register_blueprint(project_bp)
 
@@ -241,8 +243,54 @@ def create_tables():
             ALTER TABLE users
             ADD COLUMN material_access INTEGER DEFAULT 0
         """)
+
+    if "dob" not in column_names:
+        conn.execute("""
+            ALTER TABLE users
+            ADD COLUMN dob TEXT
+        """)
+
+        # ADMIN SECURITY QUESTION
+    if "security_question" not in column_names:
+        conn.execute("""
+        ALTER TABLE users
+        ADD COLUMN security_question TEXT
+    """)
+
+# ADMIN SECURITY ANSWER
+    if "security_answer" not in column_names:
+        conn.execute("""
+        ALTER TABLE users
+        ADD COLUMN security_answer TEXT
+    """)
+
+         # LOGIN ACTIVE / INACTIVE STATUS
+    if "is_active" not in column_names:
+        conn.execute("""
+            ALTER TABLE users
+            ADD COLUMN is_active INTEGER DEFAULT 0
+        """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS password_reset_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            contractor_id INTEGER NOT NULL,
+            role TEXT NOT NULL,
+            status TEXT DEFAULT 'Pending',
+            requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            FOREIGN KEY (user_id)
+            REFERENCES users(id),
+
+            FOREIGN KEY (contractor_id)
+            REFERENCES contractors(id)
+        )
+    """)
+
     conn.commit()
     conn.close()
+   
 
 #=========================================
 #Labour asign work
@@ -369,6 +417,9 @@ def admin_register():
         username = request.form["username"]
         password = request.form["password"]
 
+        security_question = request.form["security_question"]
+        security_answer = request.form["security_answer"].strip().lower()
+
         conn = get_db_connection()
 
         # Check username
@@ -404,7 +455,7 @@ def admin_register():
         # Encrypt password
         hashed_password = generate_password_hash(password)
 
-        # Save admin
+                # Save admin
         conn.execute(
             """
             INSERT INTO users
@@ -414,10 +465,12 @@ def admin_register():
                 email,
                 username,
                 password,
-                role
+                role,
+                security_question,
+                security_answer
             )
 
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 contractor_id,
@@ -425,7 +478,9 @@ def admin_register():
                 email,
                 username,
                 hashed_password,
-                "admin"
+                "admin",
+                security_question,
+                security_answer
             )
         )
 
@@ -505,6 +560,121 @@ def admin_login():
         flash("Invalid email or password.")
 
     return render_template("admin.html")
+
+# =====================================================
+# ADMIN FORGOT PASSWORD - SECURITY QUESTION
+# =====================================================
+
+@app.route("/admin/forgot-password", methods=["GET", "POST"])
+def admin_forgot_password():
+
+    if request.method == "POST":
+
+        email = request.form["email"].strip()
+
+        conn = get_db_connection()
+
+        admin = conn.execute(
+            """
+            SELECT *
+            FROM users
+            WHERE email = ?
+            AND role = 'admin'
+            """,
+            (email,)
+        ).fetchone()
+
+        conn.close()
+
+        if admin is None:
+            flash("No Admin account found with this email.")
+            return redirect(url_for("admin_forgot_password"))
+
+        if not admin["security_question"]:
+            flash("Security question is not set for this account.")
+            return redirect(url_for("admin_forgot_password"))
+
+        session["security_admin_id"] = admin["id"]
+        session["security_contractor_id"] = admin["contractor_id"]
+
+        return redirect(
+            url_for("admin_security_question")
+        )
+
+    return render_template(
+        "admin_forgot_password.html"
+    )
+
+
+# =====================================================
+# ADMIN SECURITY QUESTION VERIFY
+# =====================================================
+
+@app.route("/admin/security-question", methods=["GET", "POST"])
+def admin_security_question():
+
+    admin_id = session.get("security_admin_id")
+    contractor_id = session.get("security_contractor_id")
+
+    if not admin_id or not contractor_id:
+        return redirect(url_for("admin_forgot_password"))
+
+    conn = get_db_connection()
+
+    admin = conn.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE id = ?
+        AND contractor_id = ?
+        AND role = 'admin'
+        """,
+        (admin_id, contractor_id)
+    ).fetchone()
+
+    if admin is None:
+        conn.close()
+        return redirect(url_for("admin_forgot_password"))
+
+    if request.method == "POST":
+
+        answer = request.form["security_answer"].strip().lower()
+
+        saved_answer = (
+            admin["security_answer"] or ""
+        ).strip().lower()
+
+        if answer != saved_answer:
+
+            conn.close()
+
+            flash("Incorrect security answer.")
+
+            return redirect(
+                url_for("admin_security_question")
+            )
+
+        session["reset_user_id"] = admin["id"]
+        session["reset_role"] = "admin"
+        session["reset_contractor_id"] = admin["contractor_id"]
+
+        session.pop("security_admin_id", None)
+        session.pop("security_contractor_id", None)
+
+        conn.close()
+
+        return redirect(
+            url_for("reset_password")
+        )
+
+    security_question = admin["security_question"]
+
+    conn.close()
+
+    return render_template(
+        "admin_security_question.html",
+        security_question=security_question
+    )
 
 
 # =====================================================
@@ -601,6 +771,37 @@ def admin_dashboard():
         recent_activity=recent_activity
     )
 
+@app.route("/admin/login-activity")
+def admin_login_activity():
+
+    if "user_id" not in session or session.get("role") != "admin":
+        return redirect(url_for("admin_login"))
+
+    contractor_id = session["contractor_id"]
+
+    conn = get_db_connection()
+
+    users = conn.execute(
+        """
+        SELECT
+            id,
+            full_name,
+            role,
+            is_active
+        FROM users
+        WHERE contractor_id = ?
+        AND role IN ('customer', 'labor')
+        ORDER BY full_name
+        """,
+        (contractor_id,)
+    ).fetchall()
+
+    conn.close()
+
+    return render_template(
+        "admin_login_activity.html",
+        users=users
+    )
 
 
 
@@ -1584,6 +1785,16 @@ def labor_login():
 
         if labor and check_password_hash(labor["password"], password):
 
+            status_conn = get_db_connection()
+
+            status_conn.execute(
+                "UPDATE users SET is_active = 1 WHERE id = ?",
+                (labor["id"],)
+            )
+
+            status_conn.commit()
+            status_conn.close()
+
             session["user_id"] = labor["id"]
             session["contractor_id"] = labor["contractor_id"]
             session["full_name"] = labor["full_name"]
@@ -1597,6 +1808,64 @@ def labor_login():
         flash("Invalid username, password or contractor code.")
 
     return render_template("labor_login.html")
+# =====================================================
+# FORGOT PASSWORD - LABOR
+# =====================================================
+
+@app.route("/labor/forgot-password", methods=["GET", "POST"])
+def labor_forgot_password():
+
+    if request.method == "POST":
+
+        username = request.form["username"].strip()
+        dob = request.form["dob"]
+        mobile = request.form["mobile"].strip()
+        contractor_code = request.form["contractor_code"].strip()
+
+        conn = get_db_connection()
+
+        user = conn.execute(
+            """
+            SELECT users.*
+            FROM users
+            JOIN contractors
+            ON users.contractor_id = contractors.id
+            WHERE users.username = ?
+            AND users.dob = ?
+            AND users.mobile = ?
+            AND contractors.contractor_code = ?
+            AND users.role = 'labor'
+            """,
+            (
+                username,
+                dob,
+                mobile,
+                contractor_code
+            )
+        ).fetchone()
+
+        conn.close()
+
+        if user is None:
+            flash(
+                "Invalid username, date of birth, mobile number or contractor code."
+            )
+            return redirect(
+                url_for("labor_forgot_password")
+            )
+
+        # Temporary reset session
+        session["reset_user_id"] = user["id"]
+        session["reset_role"] = "labor"
+        session["reset_contractor_id"] = user["contractor_id"]
+
+        return redirect(
+            url_for("reset_password")
+        )
+
+    return render_template(
+        "labor_forgot_password.html"
+    )
 
 # =====================================================
 # LABOR REGISTER
@@ -1609,6 +1878,7 @@ def labor_register():
 
         full_name = request.form["full_name"]
         mobile = request.form["mobile"]
+        dob = request.form["dob"]
         username = request.form["username"]
         password = request.form["password"]
         contractor_code = request.form["contractor_code"]
@@ -1655,16 +1925,18 @@ def labor_register():
                 full_name,
                 username,
                 mobile,
+                dob,
                 password,
                 role
             )
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?,?)
             """,
             (
                 contractor["id"],
                 full_name,
                 username,
                 mobile,
+                dob,
                 hashed_password,
                 "labor"
             )
@@ -3066,10 +3338,17 @@ def customer_login():
 
         conn.close()
 
-        if customer and check_password_hash(
-            customer["password"],
-            password
-        ):
+        if customer and check_password_hash(customer["password"], password):
+
+            status_conn = get_db_connection()
+
+            status_conn.execute(
+                "UPDATE users SET is_active = 1 WHERE id = ?",
+                (customer["id"],)
+            )
+
+            status_conn.commit()
+            status_conn.close()
 
             session["user_id"] = customer["id"]
             session["contractor_id"] = customer["contractor_id"]
@@ -3086,6 +3365,180 @@ def customer_login():
 
     return render_template(
         "customer_login.html"
+    )
+# =====================================================
+# FORGOT PASSWORD - CUSTOMER
+# =====================================================
+
+@app.route("/customer/forgot-password", methods=["GET", "POST"])
+def customer_forgot_password():
+
+    if request.method == "POST":
+
+        username = request.form["username"].strip()
+        dob = request.form["dob"]
+        mobile = request.form["mobile"].strip()
+        contractor_code = request.form["contractor_code"].strip()
+
+        conn = get_db_connection()
+
+        user = conn.execute(
+            """
+            SELECT users.*
+            FROM users
+            JOIN contractors
+            ON users.contractor_id = contractors.id
+            WHERE users.username = ?
+            AND users.dob = ?
+            AND users.mobile = ?
+            AND contractors.contractor_code = ?
+            AND users.role = 'customer'
+            """,
+            (
+                username,
+                dob,
+                mobile,
+                contractor_code
+            )
+        ).fetchone()
+
+        conn.close()
+
+        if user is None:
+            flash(
+                "Invalid username, date of birth, mobile number or contractor code."
+            )
+            return redirect(
+                url_for("customer_forgot_password")
+            )
+
+        # Temporary reset session
+        session["reset_user_id"] = user["id"]
+        session["reset_role"] = "customer"
+        session["reset_contractor_id"] = user["contractor_id"]
+
+        return redirect(
+            url_for("reset_password")
+        )
+
+    return render_template(
+        "customer_forgot_password.html"
+    )
+
+# =====================================================
+# SET NEW PASSWORD
+# =====================================================
+
+@app.route("/reset-password", methods=["GET", "POST"])
+def reset_password():
+
+    user_id = session.get("reset_user_id")
+    role = session.get("reset_role")
+    contractor_id = session.get("reset_contractor_id")
+
+    if not user_id or role not in ("admin","customer", "labor"):
+        flash("Please verify your details first.")
+        return redirect(url_for("home"))
+
+    conn = get_db_connection()
+
+    user = conn.execute(
+        """
+        SELECT *
+        FROM users
+        WHERE id = ?
+        AND contractor_id = ?
+        AND role = ?
+        """,
+        (
+            user_id,
+            contractor_id,
+            role
+        )
+    ).fetchone()
+
+    if user is None:
+        conn.close()
+        flash("Invalid password reset request.")
+        return redirect(url_for("home"))
+
+    if request.method == "POST":
+
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
+
+        if len(new_password) < 6:
+            conn.close()
+            flash("Password must be at least 6 characters.")
+            return redirect(url_for("reset_password"))
+
+        if new_password != confirm_password:
+            conn.close()
+            flash("New password and confirm password do not match.")
+            return redirect(url_for("reset_password"))
+
+        hashed_password = generate_password_hash(
+            new_password
+        )
+
+        conn.execute(
+            """
+            UPDATE users
+            SET password = ?
+            WHERE id = ?
+            AND contractor_id = ?
+            """,
+            (
+                hashed_password,
+                user_id,
+                contractor_id
+            )
+        )
+
+        # Save information for Admin Recent Activity
+        conn.execute(
+            """
+            INSERT INTO activity_logs
+            (contractor_id, activity)
+            VALUES (?, ?)
+            """,
+            (
+                contractor_id,
+                user["full_name"] + " reset their password"
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        # Remove temporary reset access
+        session.pop("reset_user_id", None)
+        session.pop("reset_role", None)
+        session.pop("reset_contractor_id", None)
+
+        flash(
+            "Password changed successfully. Please login."
+        )
+
+        if role == "admin":
+            return redirect(
+                url_for("admin_login")
+            )
+
+        if role == "labor":
+            return redirect(
+                url_for("labor_login")
+            )
+
+        return redirect(
+            url_for("customer_login")
+        )
+
+    conn.close()
+
+    return render_template(
+        "reset_password.html",
+        role=role
     )
 
 
@@ -3422,6 +3875,7 @@ def customer_register():
         email = request.form["email"]
         username = request.form["username"]
         mobile = request.form["mobile"]
+        dob = request.form["dob"]
         password = request.form["password"]
         contractor_code = request.form["contractor_code"]
 
@@ -3474,10 +3928,11 @@ def customer_register():
                 email,
                 username,
                 mobile,
+                dob,
                 password,
                 role
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 contractor["id"],
@@ -3485,6 +3940,7 @@ def customer_register():
                 email,
                 username,
                 mobile,
+                dob,
                 hashed_password,
                 "customer"
             )
@@ -3507,11 +3963,24 @@ def customer_register():
 @app.route("/logout")
 def logout():
 
+    user_id = session.get("user_id")
+    role = session.get("role")
+
+    if user_id and role in ("customer", "labor"):
+
+        conn = get_db_connection()
+
+        conn.execute(
+            "UPDATE users SET is_active = 0 WHERE id = ?",
+            (user_id,)
+        )
+
+        conn.commit()
+        conn.close()
+
     session.clear()
 
-    return redirect(
-        url_for("home")
-    )
+    return redirect(url_for("home"))
 
 
 

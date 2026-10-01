@@ -81,25 +81,27 @@
             Customers
         </a>
 
+ <a href="{{ url_for('labor') }}">Labor</a>
 
-        <a href="#">
-            Labor
-        </a>
+       
 
-
-        <a href="#">
-            Subcontractor
-        </a>
-
-
-        <a href="#">
-            Material & Expenses
-        </a>
+        <!-- =====================================================
+     MATERIAL & EXPENSES LINK
+     File: admin_dashboard.html
+====================================================== -->
+<a href="{{ url_for('project.material_expenses') }}">
+    Material & Expenses
+</a>
 
 
         <a href="{{ url_for('ai_planner') }}">
             AI Work Planner
         </a>
+
+        
+        <a href="{{ url_for('admin_login_activity') }}">
+    Login Activity
+</a>
 
 
         <a href="#">

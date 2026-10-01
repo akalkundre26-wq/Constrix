@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Labor Registration - Constrix</title>
-<link rel="stylesheet" href="/CSS/style.css">
+    <link rel="stylesheet" href="/CSS/style.css">
 
-  <!-- MOBILE CSS - ALWAYS LAST -->
+    <!-- MOBILE CSS - ALWAYS LAST -->
     <link rel="stylesheet" href="/CSS/mobile.css">
 </head>
 
@@ -25,8 +25,13 @@
                required>
 
         <label>Mobile Number</label>
-        <input type="text"
-               name="mobile"
+<input type="tel" name="mobile"
+       pattern="[0-9]{10}" maxlength="10"
+       required>
+
+        <label>Date of Birth</label>
+        <input type="date"
+               name="dob"
                required>
 
         <label>Username</label>
@@ -49,9 +54,9 @@
         </button>
 
     </form>
-<p>
+<p class="register-text">
     Already have an account?
-    <a href="/labor/login">Login</a>
+  <a href="{{ url_for('labor_login') }}">Login</a>
 </p>
 
 </div>

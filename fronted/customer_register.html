@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,12 +36,15 @@
     placeholder="Username"
     autocomplete="off"
     required>
+<label>Mobile Number</label>
+<input type="tel" name="mobile"
+       pattern="[0-9]{10}" maxlength="10"
+       required>
 
-        <input
-            type="text"
-            name="mobile"
-            placeholder="Mobile Number"
-            required>
+            <input
+    type="date"
+    name="dob"
+    required>
 
         <input
             type="password"
@@ -62,11 +64,10 @@
 
     </form>
 
-    <p>
-        Already have an account?
-        <a href="{{ url_for('customer_login') }}">
-            Login
-        </a>
+    <p class="register-text">
+    Already have an account?
+    <a href="{{ url_for('customer_login') }}">Login</a>
+</p>
     </p>
 
 </div>
