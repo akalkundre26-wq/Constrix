@@ -1762,9 +1762,9 @@ def labor_login():
 
     if request.method == "POST":
 
-        username = request.form["username"]
+        username = request.form["username"].strip()
         password = request.form["password"]
-        contractor_code = request.form["contractor_code"]
+        contractor_code = request.form["contractor_code"].strip()
 
         conn = get_db_connection()
 
@@ -3310,9 +3310,9 @@ def customer_login():
 
     if request.method == "POST":
 
-        username = request.form["username"]
+        username = request.form["username"].strip()
         password = request.form["password"]
-        contractor_code = request.form["contractor_code"]
+        contractor_code = request.form["contractor_code"].strip()
 
         conn = get_db_connection()
 
